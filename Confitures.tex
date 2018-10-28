@@ -1,0 +1,528 @@
+\documentclass[12pt,a4paper]{article}
+
+%########################### Preferences #################################
+
+
+% ******** vmargin settings *********
+\usepackage{vmargin} %This give you full control over the used page arae, it maybe not the idea od Latex to do so, but I wanted to reduce to amount of white space on the page
+\setpapersize{A4}
+\setmargins{3cm}%			%linker Rand, left edge
+					 {1.5cm}%     %oberer Rand, top edge
+           {14.7cm}%		%Textbreite, text width
+           {23.42cm}%   %Texthoehe, text hight
+           {14pt}%			%Kopfzeilenhöhe, header hight
+           {1cm}%   	  %Kopfzeilenabstand, header distance
+           {0pt}%				%Fußzeilenhoehe footer hight
+           {2cm}%    	  %Fusszeilenabstand, footer distance
+
+% ********* Font definiton ************
+\usepackage{t1enc} % as usual
+\usepackage[utf8]{inputenc} % as usual
+\usepackage[french]{babel}
+\usepackage{makeidx}
+\usepackage{amsmath}
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[T1]{fontenc}
+
+% ********* Graphics definition *******
+\usepackage[pdftex]{graphicx} % required to import graphic files
+\usepackage{eso-pic} % these two are required to add the little picture on top of every page
+\usepackage{everyshi} % these two are required to add the little picture on top of every page
+
+\algnewcommand\AND{\textbf{and}}
+\algnewcommand\OR{\textbf{or}}
+
+\pagestyle{plain} % on headers or footers on the first page
+
+\makeindex
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	\includegraphics[width=0.30\textwidth]{logo.jpg}\par\vspace{1cm}
+	{\scshape\LARGE Sorbonne Universit\'e \par}
+	\vspace{1cm}
+	{\scshape\Large 3I003 : Algorithmique\par}
+	\vspace{1.5cm}
+	{\Large \bfseries Projet :\par}
+	{\huge\bfseries Confitures\par}
+	\vspace{2cm}
+	{\Large\itshape Ahmed Boukerram \par Angelo Ortiz\par}
+	
+	\vfill
+
+% Bottom of the page
+	{\large Licence d'Informatique\par}
+	{\large Ann\'ee 2018/2019\par}
+\end{titlepage}
+
+%\newpage
+
+%%The following loads the picture on top of every page, the numbers in \put() define the position on the page:
+%\AddToShipoutPicture{\setlength\unitlength{0.1mm}\put(604,2522){\includegraphics[width=1.5cm]{logo.jpg}}}
+
+%\pagestyle{cb} % now we want to have headers and footers
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+Une s\'equence d'ADN (acide Desoxyribonucleique) est une suite de nucl\'eotides, chacun comprenant trois \'el\'ements
+\begin{itemize}
+	\item une mol\'ecule de base : l'ad\'enine {\itshape A}, la guanine {\itshape G}, la cytosine {\itshape C} ou la thymine {\itshape T},
+	\item un sucre, le d\'esoxyribose,
+	\item et du phosphate.
+\end{itemize}
+Chaque nucl\'eotide est d\'esign\'e par la premi\`ere lettre de sa mol\'ecule de base. Une s\'equence d'ADN est ainsi un mot sur l'alphabet \( \mathcal{A} = \{A, C, G, T\} \). Par exemple, \( a = ATCGGCTGCATTTCGA \) repr\'esente une s\'equence d'ADN.
+
+Bien que l'on consid\`ere la structure d'une s\'equence d'ADN comme une suite de nucl\'eotides, sa repr\'esentation physique est plus complexe : en effet, les nucl\'eotides se regroupent par paires, l'ad\'enine {\itshape A} avec la thymine {\itshape T} et la guanine {\itshape G} avec la cytosine {\itshape C}.
+
+La structure secondaire {\itshape S} d'une s\'equence d'ADN \( a = a_1 \dotsm a_n \) de taille {\itshape n} est d\'efinie comme un ensemble de couples d'indices \( (i,j) \), avec \( 1 \leq i < j \leq n\) v\'erifiant les propri\'et\'es suivantes :
+\begin{enumerate}
+	\item {\itshape S} d\'efinit un couplage : pour tout indice \( i \in \{1,\dotsc,n\} \), il existe au plus un couple de {\itshape S} contenant {\itshape i}.
+	\item On suppose que il n'y a pas de n\oe ud : il n'existe pas de couple \( (i_1,j_1) \) et \( (i_2,j_2) \) de {\itshape S} avec \( i_1 < i_2 < j_1 < j_2 \).
+	\item Tout couple \( (i,j) \in S \) v\'erifie \( (a_i,a_j) \in \{(A,T),(T,A),(G,C),(C,G)\}\).
+\end{enumerate}
+Pour tout couple \( (i,j) \in S \), on dira que {\itshape i} est coupl\'e avec {\itshape j} et {\itshape j} est coupl\'e avec {\itshape i}
+
+Le probl\`eme que l'on se pose revient \`a d\'eterminer une structure secondaire {\itshape S} de {\itshape a} dont le nombre de couples est maximum. Par exemple, pour la s\'equence \( a = TCGGCTGCATTTCGA \), une structure secondaire de taille maximale est donn\'ee par \( S = \{(1,15),(2,14),(3,13),(4,8),(5,7),(9,10)\} \).
+
+\newpage
+\section{D\'efinition et \'evaluation des algorithmes \`a programmer}
+
+Soit une s\'equence d'ADN \( a = a_1 \dotsm a_n \) de taille {\itshape n}. Pour tout couple \( (i,j) \) d'indices tels que \( 1 \leq i \leq j \leq n\) on note \( a_{i,j} \) la sous-s\'equence \( a_i \dotsm a_j \) de \( a, S_{i,j} \) une structure secondaire de \( a_{i,j} \) dont le nombre de couples est maximum et \( E_{i,j} =  |S_{i,j}| \) le nombre d'\'el\'ements de \( S_{i,j} \).
+
+Pour l'exemple pr\'ec\'edent, \( a_{3,13} = GGCTGCATTTC \), \( S_{3,13} = \{(3,13),(4,8),\\(5,7),(9,10)\} \) et \( E_{3,13} = 4 \).
+
+\subsection{Question 1}
+%Un nucl\'eotide ne peut former une paire avec lui-m\^eme. Que valent \( S_{i,i} \) et \( E_{i,i} \) pour tout \( i \in \{1, \dotsc, n\} \) ?
+Pour tout \( i \in \{1, \dotsc, n\} \), \( a_{i,i} \) est la sous-s\'equence \( a_i \) de {\itshape a}. Donc, on ne peut pas former de couple d'indices distincts dans \( a_{i,i} \). De ce fait, \( S_{i,i} = \emptyset \) et \( E_{i,i} = 0\).
+
+\subsection{Question 2}
+\begin{enumerate}
+	\item Supposons que ni {\itshape i} ni {\itshape j} ne soient coupl\'es dans \( S_{i,j} \).
+	
+	D'un c\^ot\'e, on sait que $T_{i+1,j-1} \subseteq S_{i,j}$. Par hypoth\`ese, \( S_{i,j} = T_{i+1,j-1} \).% dont les couples sont \`a valeurs dans l'intervalle $\{i+1,\dotsc,j-1\}$. 
+	
+	De l'autre c\^ot\'e, $S_{i+1,j-1}$ repr\'esente la s\'equence secondaire de la sous-s\'equence $a_{i+1,j-1}$. Or, \( T_{i+1,j-1} \) est l'ensemble des couples de la s\'equence $a_{i,j}$ \`a valeurs dans l'intervalle $\{i+1,\dotsc,j-1\}$. En consid\'erant l'hypoth\`ese, on en d\'eduit que $T_{i+1,j-1} = S_{i+1,j-1}$ et plus particuli\`erement $|T_{i+1,j-1}| = |S_{i+1,j-1}|$.
+	
+	On obtient donc par transitivit\'e que $E_{i,j} = E_{i+1,j-1}$.
+	
+	\item Supposons que {\itshape j} ne soit pas coupl\'e dans \( S_{i,j} \).
+	
+	D'une part, on sait que $T_{i,j-1} \subseteq S_{i,j}$. Par hypoth\`ese, \( S_{i,j} = T_{i,j-1} \). 
+	
+	D'autre part, $S_{i,j-1}$ repr\'esente la s\'equence secondaire de la sous-s\'equence $a_{i,j-1}$. Or, \( T_{i,j-1} \) est l'ensemble des couples de la s\'equence $a_{i,j}$ \`a valeurs dans l'intervalle $\{i,\dotsc,j-1\}$. En consid\'erant l'hypoth\`ese, on en d\'eduit que $T_{i,j-1} = S_{i,j-1}$ et plus particuli\`erement $|T_{i,j-1}| = |S_{i,j-1}|$.
+	
+	On obtient donc par transitivit\'e que $E_{i,j} = E_{i,j-1}$.
+	
+	\item Supposons que le couple \( (i,j) \in S_{i,j} \).
+	
+	D'abord, on sait que $T_{i+1,j-1} \subseteq S_{i,j}$. Par hypoth\`ese, \( S_{i,j} = \{(i,j)\} \cup T_{i+1,j-1} \). De plus, puisque \( \{ (i,j) \} \cap T_{i+1,j-1} = \emptyset \), \( |S_{i,j}| = 1 + |T_{i+1,j-1}| \).
+	
+	Par ailleurs, $S_{i+1,j-1}$ repr\'esente la s\'equence secondaire de la sous-s\'equence $a_{i+1,j-1}$. Or, \( T_{i+1,j-1} \) est l'ensemble des couples de la s\'equence $a_{i,j}$ \`a valeurs dans l'intervalle $\{i+1,\dotsc,j-1\}$. En consid\'erant l'hypoth\`ese, on en d\'eduit que $T_{i+1,j-1} = S_{i+1,j-1}$ et plus particuli\`erement $|T_{i+1,j-1}| = |S_{i+1,j-1}|$.
+	
+	On obtient donc par transitivit\'e que $E_{i,j} = 1+E_{i+1,j-1}$.
+	
+	\item Supposons que le couple \( (k,j) \in S_{i,j} \), avec \( k \in \{ i+1, \dotsc, j-1 \} \).
+	
+	Premi\`erement, on sait que $T_{i,k-1},T_{k,j} \subseteq S_{i,j}$. Par hypoth\`ese et par le fait qu'il ne peut pas y avoir de n\oe uds, $S_{i,j} = T_{i,k-1} \cup T_{k,j}$. De plus, puisque \( \\T_{i,k-1} \cap T_{k,j} = \emptyset \), \( |S_{i,j}| = |T_{i,k-1}| + |T_{k,j}| \).
+	
+	Deuxi\`emement, $S_{i,k-1}$ repr\'esente la s\'equence secondaire de la sous-s\'equence $a_{i,k-1}$. Or, \( T_{i,k-1} \) est l'ensemble des couples de la s\'equence $a_{i,j}$ \`a valeurs dans l'intervalle $\{i,\dotsc,k-1\}$. En consid\'erant l'hypoth\`ese, on en d\'eduit que $T_{i,k-1} = S_{i,k-1}$ et plus particuli\`erement $|T_{i,k-1}| = |S_{i,k-1}|$. 
+	
+	R\'eciproquement, on d\'eduit $|T_{k,j}| = |S_{k,j}|$.
+	
+	On obtient donc par transitivit\'e que \( E_{i,j} = E_{i,k-1} + E_{k,j} \).
+\end{enumerate}
+
+\subsection{Question 3}
+\begin{enumerate}
+	\item Soit la propri\'et\'e suivante \( P :  \)
+	\begin{gather*}
+	E_{i,j} = \max(E_{i+1,j-1} + e(i,j), E_{i,j-1}, \displaystyle\max_{i < k < j} E_{i,k-1} + E_{k,j}), \\
+	\forall i \in \{ 1, \dotsc, n - 1 \}, \forall j \in \{ i+1, \dotsc, n \}.
+	\end{gather*}
+	
+	Montrons que {\itshape P} est vraie.
+	
+	
+	V\'erifions d'abord que cette propri\'et\'e est vraie pour tout couple \( (i, i+1) \) pour \( i \in \{ 1, \dotsc, n - 1 \} \).
+	On traite s\'epar\'ement chaque argument de la fonction \texttt{max}.
+	
+	Le premier argument est alors \( E_{i+1,i} + e(i,i+1) \). Or, d'apr\`es l'\'enonc\'e, \( E_{i+1,i} = 0\). Donc le premier terme est r\'eduit \`a \( e(i,i+1) \).
+	
+	De plus, d'apr\`es la question 1, le deuxi\`eme argument est \( E_{i,i} = 0 \).
+	
+	Finalement, \( \nexists k \in \{ 1, \dotsc, n \} \) tel que \( i < k < i+1 \). D'o\`u, on peut n\'egliger le dernier argument \( \displaystyle\max_{i < k < i+1} E_{i,k-1} + E_{k,i+1} \).
+	
+	Donc, \( \max(E_{i+1,i} + e(i,i+1), E_{i,i}, \displaystyle\max_{i < k < i+1} E_{i,k-1} + E_{k,i+1}) = e(i,i+1) \). Or, \( E_{i,i+1} = e(i,i+1) \). D'o\`u, on obtient la'\'egalit\'e cherch\'ee. \hfill\ensuremath{\blacksquare}
+	
+	V\'erifions maintenant que cette propri\'et\'e est vraie pour tout couple \( (i, j) \) pour \( i \in \{ 1, \dotsc, n - 1 \} \) et \( j \in \{ i+2, \dotsc, n - 1 \} \).
+	
+	%\underline{Induction} : Supposons \( P(j) \) vraie pour un \( j \in \{ i+1, \dotsc, n-1 \} \). Montrons \( P(j+1) \) vraie.
+	
+	%\( E_{i,j+1} = max(E_{i+1,j} + e(i,j+1), E_{i,j}, \displaystyle\max_{i < k < j+1} E_{i,k-1} + E_{k,j+1}) \)
+	D'apr\`es la question pr\'ec\'edente, quatre cas sont possibles selon le couplage des bornes :
+	\begin{enumerate}
+		\item Aucune des deux bornes de \( S_{i,j} \) n'est coupl\'ee.
+		
+		Donc, \( E_{i,j} = E_{i+1,j-1} \). De plus, \( e(i,j) = 0 \). 
+		
+		D'o\`u, on peut poser \( E_{i,j} = E_{i+1,j-1} + e(i,j) \).
+		\item L'une des deux bornes de \( S_{i,j} \) n'est pas coupl\'ee.
+		
+		Donc, \( E_{i,j} = \max(E_{i+1,j}, E_{i,j-1}) \).
+		\item Les deux bornes de \( S_{i,j} \) sont coupl\'ees, c'est-\`a-dire \( (i,j) \in S_{i,j} \).
+		
+		Donc, \( E_{i,j} = 1 + E_{i+1,j-1} \). De plus, \( e(i,j) = 1 \). 
+		
+		D'o\`u, on peut poser \( E_{i,j} = E_{i+1,j-1} + e(i,j) \).
+		\item L'une des deux bornes de \( S_{i,j} \) est coupl\'ee avec un \'el\'ement \( \\k \in \{ i+1, \dotsc, j-1 \} \).
+		
+		Donc, \( E_{i,j} \) est obtenu pour une partition en deux sous-s\'equences de la forme \( a_i \dotsm a_{k-1} \) et \( a_k \dotsm a_j\). D'o\`u, \( E_{i,j} = \displaystyle\max_{i+2 \leq k \leq j-1} (E_{i,k-1} + E_{k,j}) \).
+		
+	\end{enumerate}
+	On sait que pour chaque cas l'expression donn\'ee pour \( E_{i,j} \) correspond au cardinal d'une structure secondaire \( S_{i,j} \) de taille maximale. On en d\'eduit que
+	\begin{equation}
+	E_{i,j} = \max(E_{i+1,j-1} + e(i,j), 
+	\max(E_{i+1,j}, E_{i,j-1}),
+	\displaystyle\max_{i+2 \leq k \leq j-1} (E_{i,k-1} + E_{k,j})).
+	\end{equation} 
+	\'Etant donn\'e qu'il y a des fonctions \texttt{max} imbriqu\'ees dans (1), on peut r\'eordonner les arguments et passer ainsi le premier de la deuxi\`eme fonction \texttt{max} \`a la troisi\`eme avec \( k = i+1 \). Donc,  
+	\begin{equation}
+	E_{i,j} = \max(E_{i+1,j-1} + e(i,j), E_{i,j-1},
+	\displaystyle\max_{i+1 \leq k \leq j-1} (E_{i,k-1} + E_{k,j})).
+	\end{equation}
+	
+	Autrement dit,
+	\begin{gather*}
+	E_{i,j} = \max(E_{i+1,j-1} + e(i,j), E_{i,j-1},
+	\displaystyle\max_{i < k < j} (E_{i,k-1} + E_{k,j})).
+	\tag*{$\blacksquare$}
+	\end{gather*}
+	
+	\item De la m\^eme mani\`ere que pour r\'eordonner des arguments dans la question pr\'ec\'edente, on passe le deuxi\`eme argument \`a la fonction \texttt{max} imbriqu\'ee avec \( k = j \). Donc,  
+	\begin{gather*}
+	E_{i,j} = \max(E_{i+1,j-1} + e(i,j), 
+	\displaystyle\max_{i < k \leq j} (E_{i,k-1} + E_{k,j})), \\
+	\forall i \in \{ 1, \dotsc, n - 1 \}, \forall j \in \{ i+1, \dotsc, n \}.
+	\tag*{$\square$}
+	\end{gather*}
+\end{enumerate}
+
+\subsection{Question 4}
+On d\'eduit du paragraphe pr\'ec\'edent une fonction r\'ecursive \texttt{tailleMaxRec} qui pour une s\'equence {\itshape a} de taille {\itshape n} et deux entiers \( (i,j) \in \{1, \dotsc, n\} \) retourne \( E_{i,j} \). En voici le pseudocode :
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Function{e}{a,i,j}
+\State $couples \gets [('A','T'),('T','A'),('G','C')('C','G')]$
+\If {$(a[i-1],a[j-1]) \text{ in {\itshape couples}}$} \Return 1
+\EndIf
+\State \Return 0
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Function{tailleMaxRec}{a,i,j}
+\If {$j-i < 1$} \Return 0
+\EndIf
+%\If {$j-i = 1$} \Return $\texttt{e}(a,i,j)$
+%\EndIf
+\State \Return $\max$(\texttt{tailleMaxRec}$(a,i+1,j-1)$+\texttt{e}$(i,j)$,
+
+ $\max_{i<k\leq j}$ (\texttt{tailleMaxRec}$(a,i,k-1)$+\texttt{tailleMaxRec}$(a,k,j)$))
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Question 5}
+Soient \( i \in \{ 1, \dotsc, n \}, j \in \{ i, \dotsc, n \} \). Posons \( p = j-i \in \{ 0, \dotsc, n-1 \} \). Soit la propri\'et\'e \( P(p) : \) \texttt{tailleMaxRec} se termine et est valide. 
+
+Montrons-la par r\'ecurrence forte sur $p$.
+
+{\bfseries N.B.} On utilisera dans la suite des questions la sigle {\itshape IE} pour instruction \'el\'ementaire.
+
+
+\underline{Cas n\'egatif} : Pour $j < i$, \texttt{tailleMaxRec} est valide et se termine car on a pos\'e $E_{i,j} = 0$. Ainsi, on rentre dans le branchement conditionnel et renvoie bien $0$. De plus, on n'a r\'ealis\'e que des {\itshape IE} en nombre fini.
+
+
+\underline{Base} : Pour \( p = 0\), \( j = i \). On rentre dans le branchement conditionnel. Alors, on renvoie $0$. Or, d'apr\`es la question 1, \( E_{i,i} = 0 \). Donc, la fonction est valide.
+
+De la m\^eme mani\`ere que pour prouver que la fonction se termine lorsque $j<i$, on montre qu'elle finit dans ce cas-l\`a.
+
+De ces faits, $P(0)$ est vraie.
+	
+		
+	\underline{Induction} : Supposons \( P(p) \) vraie pour tout \( p < p_0 \), pour un $p_0>0$ fix\'e. Montrons \( P(p_0) \) vraie.
+	
+	Comme $p_0 > 0$, on ne rentre pas dans le branchement conditionnel. Donc, on renvoie le maximum de deux expressions :
+	
+	\begin{itemize}
+		\item $\texttt{tailleMaxRec}(a,i+1,j-1) + \texttt{e}(i,j)$. Par hypoth\`ese de r\'ecurrence, $P(p)$ est vraie pour $0 \leq p=j-i-2 < p_0$. De plus, d'apr\`es la remarque du cas n\'egatif, la fonction se termine et est valide lorsque $j-i-2<0$. Quant \`a \texttt{e}(i,j), cette fonction ne contient que des {\itshape IE} et donc se termine. De plus, elle est bien valide car la valeur de retour est $0$ ou $1$ selon la possibilit\'e de couplage entre $i$ et $j$.
+		\item $\displaystyle\max_{i < k \leq j} {\texttt{tailleMaxRec}(a,i,k-1)+\texttt{tailleMaxRec}(a,k,j)}$. Pour tout $\\k \in \{i+1, \dotsc, j\}$, 
+		\begin{itemize}
+			\item $\texttt{tailleMaxRec}(a,i,k-1)$ finit et est valide par hypoth\`ese de r\'ecurrence : $0 \leq k-1-i < p_0$. 
+			\item $\texttt{tailleMaxRec}(a,k,j)$ finit et est valide par hypoth\`ese de r\'ecurrence : $0 \leq j-k < p_0$.
+		\end{itemize}
+		Par ailleurs, la fonction \texttt{max} est finie et renvoie bien le maximum des $j-i$ valeurs de la somme.
+	\end{itemize}
+	
+	Dans la deuxi\`eme partie de la question 3, on a montr\'e une formule calculant $E_{i,j}$, c'est-\`a-dire la taille maximale d'une s\'equence de taille $j-i+1$ avec $i<j$, ce qui est bien le cas ici. On sait que cette formule est transcrite dans le code de la fonction \texttt{tailleMaxRec}. De plus, on vient de montrer que la valeur de retour de la fonction est finie et correspond au maximum des deux arguments d\'ecrits ci-dessus. De ces faits, $P(p_0)$ est vraie.
+	
+	
+	\underline{Conclusion} : 
+	\begin{equation*}
+\left .\begin{array}{l}
+P(0) \text{ vraie } \\
+\forall p_0 \in \{1,\dotsc, n-1\}, [(\forall p < p_0, P(p)) \implies P(p_0) ]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall p \in \{0,\dotsc, n-1\}, \\
+\texttt{tailleMaxRec} \text{ se termine} \\
+\text{et est valide.}
+\end{array}\right .
+\end{equation*}
+
+\subsection{Question 6}
+Soit \( u_p \) le nombre d'appels de la fonction \texttt{tailleMaxRec} effectu\'es pour \( p = j-i \).
+\begin{enumerate}
+	\item \( u_0 = 1 \) car on rentre dans le branchement conditionnel.
+	
+	\( u_1 = 4 \) car on ne rentre pas dans le branchement conditionnel et fait 1 appel pour le premier argument de la fonction \texttt{max} et 2 appels pour le deuxi\`eme argument.
+	\item Soit \( p \geq 2 \). Soit la propri\'et\'e \( Q(p): u_p = u_{p-2} + 1 + 2\sum_{i=0}^{p-1}{u_i} \). 
+	
+	Montrons-la par d\'emonstration directe.
+	
+	Soit $p\geq 2$. Comme $p > 1$, on ne rentre pas dans le branchement conditionnel de la fonction \texttt{tailleMaxRec}. Donc, on renvoie le maximum de deux expressions :
+	
+	\begin{itemize}
+		\item $\texttt{tailleMaxRec}(a,i+1,j-1) + \texttt{e}(i,j)$. Ici, le nombre d'appels \`a la fonction est $u_{p-2}$ car $j-1-(i+1)=j-i-2=p-2$.
+		\item \( \displaystyle\max_{i < k \leq j} {\texttt{tailleMaxRec}(a,i,k-1)+\texttt{tailleMaxRec}(a,k,j)} \). Pour tout $\\k \in \{i+1, \dotsc, j\}$, 
+		\begin{itemize}
+			\item $\texttt{tailleMaxRec}(a,i,k-1)$ r\'ealise $u_{k-1-i}$ appels \`a la fonction. 
+			\item $\texttt{tailleMaxRec}(a,k,j)$ r\'ealise $u_{j-k}$ appels \`a la fonction.
+		\end{itemize}
+	\end{itemize}
+	Donc, on a $u_p=u_{p-2}+1+\sum_{k=i+1}^{j}{u_{k-1-i}+u_{j-k}}$. 
+	
+	D'abord, on r\'e-indexe la somme : $u_p=u_{p-2}+1+\sum_{k=0}^{j-i-1}{u_{k}+u_{j-k-i-1}}$. 
+	
+	Or, $p=j-i$. Donc, on s\'epare les termes : $\\u_p=u_{p-2}+1+\sum_{k=0}^{p-1}{u_{k}}+\sum_{k=0}^{p-1}{u_{p-1-k}}$. 
+	
+	Puis, on inverse l'indice de la deuxi\`eme somme : $\\u_p=u_{p-2}+1+\sum_{k=0}^{p-1}{u_{k}}+\sum_{k=0}^{p-1}{u_{k}}$. 
+	
+	Finalement, on peut changer la variable des sommes et les regrouper : 
+	\begin{gather*}
+	u_p=u_{p-2}+1+2\sum_{i=0}^{p-1}{u_{i}}.
+	\tag*{$\square$}
+	\end{gather*}
+	
+	\item Soit la propri\'et\'e \( R(p): 2^p \leq u_p \leq 4^p \). 
+	
+	Montrons-la par r\'ecurrence forte sur {\itshape p}.
+	
+	\underline{Base} : Pour \( p = 0\), d'apr\`es la sous-question 1, \( 2^0 = 1 \leq u_0 = 1 \leq 1 = 4^0 \). Donc, \( R(0) \) est vraie.
+	
+	Pour \( p = 1\), d'apr\`es la sous-question 1, \( 2^1 = 2 \leq u_1 = 4 \leq 4 = 4^1 \). Donc, \( R(1) \) est vraie.
+	
+	\underline{Induction} : Supposons \( R(p) \) vraie pour tout \( p < p_0 \), pour un \( p_0 > 1 \) fix\'e. Montrons \( R(p_0) \) vraie.
+	
+	D'apr\`es la sous-question 2, \( u_{p_0} = u_{p_0-2} + 1 + 2\sum_{i=0}^{p_0-1}{u_i} \). 
+	
+	Or, par hypoth\`ese de r\'ecurrence, pour tout \( i \in \{0,\dotsc,p_0-1 \}, Q(i) \) est vraie. Donc, \( 2^{p_0-2} + 1 + 2\sum_{i=0}^{p_0-1}{2^i} \leq u_{p_0} \leq 4^{p_0-2} + 1 + 2\sum_{i=0}^{p_0-1}{4^i} \). D'o\`u, \( 2^{p_0-2} + 1 + 2\dfrac{2^{p_0}-1}{2-1} \leq u_{p_0} \leq 4^{p_0-2} + 1 + 2\dfrac{4^{p_0}-1}{4-1} \), c'est-\`a-dire \(\\ 2^{p_0} \leq 2^{p_0-2} + 2^{p_0+1} - 1 \leq u_{p_0} \leq 4^{p_0-2} + 2\dfrac{4^{p_0}}{3} + \dfrac{1}{3} \leq 4^{p_0}  \).
+	
+	\underline{Conclusion} : 
+	\begin{equation*}
+\left .\begin{array}{l}
+R(0), R(1) \text{ vraies } \\
+\forall p_0 \in \{2,\dotsc, n-1\}, [(\forall p < p_0, R(p)) \implies R(p_0) ]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall p \in \{0,\dotsc, n-1\}, \\
+2^p \leq u_p \leq 4^p
+\end{array}\right .
+\end{equation*}
+
+\item D'une part, d'apr\`es le paragraphe pr\'ec\'edent, $R(n-1)$ est vraie, c'est-\`a-dire \( 2^{n-1} \leq u_{n-1} \leq 4^{n-1} \), o\`u \( n = p+1=j-i+1 \) est la longueur de la s\'equence. 
+
+D'autre part, chaque appel \`a \texttt{tailleMaxRec} ne contient que des {\itshape IE} \`a part ses appels r\'ecursifs (on consid\`ere que la fonction \texttt{max} est optimale et fait donc les comparaisons {\itshape in situ}).
+
+Donc, on peut exprimer la complexit\'e de la fonction en nombre d'appels r\'ecursifs effectu\'es. De ce fait, la complexit\'e de \texttt{tailleMaxRec} est en $\Omega(2^n)$ et $\mathcal{O}(4^n)$.
+\end{enumerate}
+
+\subsection{Question 7}
+On utilisera un tableau \`a deux dimensions pour stocker les valeurs de \( E_{i,j} \). De plus, on consid\`erera que l'acc\`es \`a une case du tableau et l'appel \`a \texttt{e()} sont des instructions \'el\'ementaires  compte tenu de leur complexit\'e : $\Theta(1)$. 
+
+Tout d'abord, on initialise la premi\`ere case de la premi\`ere ligne \`a 0. Donc, la complexit\'e de cette partie est en $\Theta(1)$. 
+
+Puis, la premi\`ere boucle \texttt{for} est effectu\'ee \( n-1 \) fois et \`a chaque tour de boucle on ne r\'ealise que des {\itshape IE}. Donc, la complexit\'e de cette partie est en $\Theta(n)$. 
+
+Finalement, on effectue deux boucles l'une \`a l'int\'erieur de l'autre. La boucle imbriqu\'ee consiste en le calcul du maximum de deux expressions. Les op\'erations arithm\'etiques n'\'etant pas d'instructions repr\'esentatives, la premi\`ere d'entre elles comprend deux {\itshape IE}. En ce qui concerne le deuxi\`eme argument, le nombre d'{\itshape IE} effectu\'ees est \( 2p \). Donc, le nombre d'{\itshape IE} r\'ealis\'ees dans cette partie est \( \\c = \sum_{p=1}^{n-1}\sum_{i=1}^{n-p}{2p+2} = \sum_{p=1}^{n-1}{(2p+2)(n-p)} = 2\sum_{p=1}^{n-1}{[p(n-1)+n-p^2]} \). D'o\`u, \( c = (n-1)^2n + 2(n-1)n - \dfrac{(n-1)n(2n-1)}{3} = \dfrac{(n-1)n(n+4)}{3} \). Donc, la complexit\'e de cette partie est en $\Theta(n^3)$.
+
+De ces trois faits, on en d\'eduit que la complexit\'e de l'algorithme est en $\Theta(n^3)$.
+%Le co\^ut en temps d'ex\'ecution du calcul de l
+
+\lstset{language=Python,inputencoding=utf8/latin1}
+\lstdefinestyle{custompy}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  %frame=L,
+  xleftmargin=\parindent,
+  language=Python,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+\lstset{escapechar=@,style=custompy}
+\newpage
+\section{Mesure exp\'erimentale de la complexit\'e}
+Le but de ce second exercice est de mesurer de mani\`ere exp\'erimentale la complexit\'e de la fonction \texttt{tailleMaxRec} et de l'algorithme d\'ecrit dans la question 5 de l'exercice pr\'ec\'edent. Le choix du langage de programmation est libre. La complexit\'e exp\'erimentale de l'ex\'ecution d'une fonction correspond ici au temps qu'il faut pour que la fonction s'ex\'ecute.
+
+Dans cet exercice, {\itshape n} d\'esigne la taille de la s\'equence initiale.
+
+\subsection{Question 1}
+Voici le code des fonctions \texttt{e}, \texttt{maximum}, \texttt{tailleMaxRec} et \texttt{tailleMaxIter}.
+\begin{lstlisting}[mathescape]
+
+def e(a,i,j):
+    """ str x int x int -> bool
+    rend True si i et j peuvent être couplés dans a, False sinon
+    """
+    # couples : list[tuple[str]]
+    couples = [('A','T'),('A','T'),('G','C'),('C','G')]
+    if (a[i-1],a[j-1]) in couples:
+        return True
+    return False
+
+def maximum(a,i,j):
+    """ str x int x int -> int
+    rend le nombre de couples de la structure secondaire de taille maximale obtenue pour l'un des partitionnements de la sous-séquence $\color{purple!40!black}a_{i,j}$
+    """
+    # maxi : int
+    maxi = 0
+    # k : int
+    for k in range(i,j):
+        # val : int
+        val = tailleMaxRec(a,i-1,k-1)+tailleMaxRec(a,k,j-1)
+        if val > maxi:
+            maxi = val
+    return maxi
+
+def tailleMaxRec(a,i,j):
+    """ str x int x int -> int
+    rend le nombre de couples de la structure secondaire de taille maximale de la sous-séquence $\color{purple!40!black}a_{i,j}$
+    """
+    if j-i < 1:
+        return 0
+    return max(tailleMaxRec(a,i+1,j-1) + e(a,i,j), \
+                            maximum(a,i+1,j+1))
+
+
+
+
+def tailleMaxIter(a,i,j):  
+    """ str x int x int -> list[list[int]]
+    rend un tableau à 2 dimensions contenant le nombre de couples de la structure secondaire de taille maximale de chaque sous-sequence $\color{purple!40!black}a_{k,l}$ avec $\color{purple!40!black}i \leq k,l \leq j$ et $\color{purple!40!black}k \leq l$
+    """
+    # n : int
+    n = len(a)
+    # E : list[list[int]]
+    E = [[0]]
+    # i : int
+    for i in range(2,n+1,1):
+        E.append([0]*i)
+    # p : int
+    for p in range(1,n):
+        for i in range(1,n-p+1):
+            E[i-1].append(max(E[i][i+p-2]+e(a,i,i+p), \
+                   max(E[i-1][k-2]+E[k-1][i+p-1] \
+                       for k in range(i+1,i+p+1))))
+    return E[i-1][j-1]
+\end{lstlisting}
+
+
+Voici un jeu d'essai.
+% \begin{figure}[!h]
+% %\includegraphics[width=\columnwidth]{filename}%
+% \fbox{\includegraphics[width=\columnwidth]{jeu.png}}
+% \end{figure}
+
+\newpage
+\subsection{Question 2}
+Voici le code de la fonction \texttt{SeqAleatoire(n)} qui renvoie une s\'equence d'ADN al\'eatoire de taille {\itshape n}.
+\begin{lstlisting}
+
+import random
+
+def SeqAleatoire(n):
+    """ int -> str
+    rend une séquence aléatoire d'ADN de taille n 
+    """
+    seq = ''
+    for i in range(n):
+        seq += random.choice('AGCT')
+    return seq
+\end{lstlisting}
+
+\subsection{Question 3}
+La plus grande valeur de $n$ que l'on peut traiter sans probl\`eme de m\'emoire ou de temps d'ex\'ecution de quelques minutes pour la fonction \texttt{tailleMaxRec} est 18. 
+
+Quant \`a \texttt{tailleMaxIter}, la valeur de $n$ correspondante est 1600.
+
+\subsection{Question 4}
+On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \`a la fonction \texttt{tailleMaxRec} selon les valeurs de $n$.
+	\begin{center}
+	\begin{tabular}{|c|cc|}
+	\hline $n$ & $CRec(n)$ (en s.) & $\log CRec(n)$ \\
+	\hline 11 &   0.0915572 & -1.0383075 \\ 
+	\hline 12 &   0.3087260 & -0.5104268 \\ 
+	\hline 13 &   0.9356748 & -0.0288751 \\ 
+	\hline 14 &   3.0208589 &  0.4801304 \\
+	\hline 15 &   9.7992974 &  0.9911949 \\ 
+	\hline 16 &  30.8693360 &  1.4895273 \\ 
+	\hline 17 & 100.5011405 &  2.0021710 \\
+	\hline 18 & 322.5870859 &  2.5086470 \\
+	\hline
+	\end{tabular}
+	\end{center}
+	
+	On en d\'eduit la droite de r\'egression de $\log CRec(n)$ en fonction de $n$ : $\\\Delta : y = 0.505452x - 6.592292$. On remarque que la pente de la droite est $0.505452$, ce qui \'etait attendu car la valeur est comprise entre $\log 2 = 0.301030$ et $\\\log 4 = 0.602060$. 
+	%On remarque que la fonction $\log CRec(n)$ est lin\'eaire compte tenu que les points forment une droite dont la pente est $0.5108032$ et l'\'ecart type est $\sigma = 0.0075038$.
+
+\newpage
+\subsection{Question 5}
+On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \`a la fonction \texttt{tailleMaxIter} selon les valeurs de $n$.
+	\begin{center}
+	\begin{tabular}{|c|cc|}
+	\hline $n$ & $CIter(n)$ (en s.) & $\dfrac{CIter(n)}{n^3}$ \\[6pt]
+	\hline 200 & 0.5192115 & $\num{6.4901434E-08}$ \\ 
+	\hline 400 & 4.1114257 & $\num{6.4241026E-08}$ \\ 
+	\hline 600 & 14.2562266 & $\num{6.6001049E-08}$ \\ 
+	\hline 800 & 34.8566699 & $\num{6.8079433E-08}$ \\
+	\hline 1000 & 71.8084174 & $\num{7.1808417E-08}$ \\ 
+	\hline 1200 & 124.3441816 & $\num{7.1958438E-08}$ \\ 
+	\hline 1400 & 200.7089246 & $\num{7.3144652E-08}$ \\
+	\hline 1600 & 314.0727653 & $\num{7.6677921E-08}$ \\
+	\hline
+	\end{tabular}
+	\end{center}
+	
+	On en d\'eduit la droite de r\'egression de $\dfrac{CIter(n)}{n^3}$ en fonction de $n$ : $\\\Delta : y = \num{8.842541E-12}x - \num{6.164326E-08}$. On remarque l'ordre de grandeur de la pente de la droite : $\num{8.842541E-12} \ll 1$. Ceci implique que la fonction est bien constante de valeur $\num{6.9601546E-08}$. 
+	%On remarque que la fonction $\dfrac{CIter(n)}{n^3}$ est constante compte tenu que les points forment la droite $\Delta : y = \num{7.3965667e-08}$ avec un \'ecart type ${\sigma = \num{5.8075249e-09}}$.
+\printindex
+\end{document}
+
+
+
