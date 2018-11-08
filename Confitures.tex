@@ -24,6 +24,7 @@
 \usepackage{amsmath}
 \usepackage{listingsutf8}
 \usepackage{xcolor}
+\usepackage{xspace}
 \usepackage{amssymb}
 \usepackage[shortlabels]{enumitem} 
 \usepackage{siunitx}
@@ -37,8 +38,9 @@
 \usepackage{everyshi} % these two are required to add the little picture on top of every page
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 
-\algnewcommand\AND{\textbf{and}}
-\algnewcommand\OR{\textbf{or}}
+\algnewcommand\AND{\textbf{and}\xspace}
+\algnewcommand\OR{\textbf{or}\xspace}
+\newcommand{\BigO}{\mathcal{O}}
 
 \pagestyle{plain} % on headers or footers on the first page
 
@@ -309,9 +311,9 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \begin{algorithm}
 \caption{AlgoProgDyn}
 \begin{algorithmic}[1]
-\Require $k \geq 0$ and $S \geq 0$
+\Require $k \geq 0$ \AND $S \geq 0$
 \Function{Main}{$k$: integer, $V$: $k$-integer array, $S$: integer}
-    \State $M$ : $S \times k$ integer matrix
+    \State $M$: $S \times k$ integer matrix
     \For{$s=0$ to $S$}
         \For{$i=0$ to $k$}
             \State $M[s][i] \gets $ \Call{GetMsi}{$V$, $M$, $s$, $i$}
@@ -352,7 +354,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 %\caption{AlgoProgDyn}
 \begin{algorithmic}[1]
 \Function{GetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
-    \State $A$ : integer array
+    \State $A$: integer array
     \If {$s = 0$} 
         \State \Return 0
     \ElsIf {$s < 0$} 
@@ -367,7 +369,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \Statex
 \Function{SetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
     \State $A$: integer array filled with $i$ zeros
-    \If {$s > 0$ and $i > 0$}
+    \If {$s > 0$ \AND $i > 0$}
         \State $left \gets \Call{GetMsi}{V, M, s, i-1}$
         \State $up \gets \Call{GetMsi}{V, M, s-V[i], i}+1$
         \If {$left < up$}
@@ -382,7 +384,34 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \end{algorithmic}
 \end{algorithm}
  
+ \item Dans un deuxi\`eme temps, on souhaite \'eviter de copier dans chaque case du tableau $M$, les tableaux $A$ des bocaux utilis\'es. Pour ce faire, on conserve l'algorithme initial et on reconstitue {\itshape a posteriori} le tableau $A$ de la solution optimale. Voici le pseudocode du deuxi\`eme algorithme :
+ \begin{algorithm}
+\caption{AlgoProgDynRet}
+\begin{algorithmic}[1]
+\Require $k \geq 0$ \AND $S \geq 0$
+\Function{ConfitureBackwards}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $S \times k$ integer matrix}
+    \State $A$: integer array fileld with $k$ zeros
+    \State $s, i$: integers
+    \State $s \gets S$
+    \State $i \gets k$
+    \While {$s \ne 0$}
+        \If {$i > 0$ \AND $M[s][i] = M[s][i-1]$}
+        \Comment {no more capacity $V[i]$}
+            \State $i \gets i-1$
+        \Else
+        \Comment {$M[s][i] = M[s-V[i]][i] + 1$}
+            \State $A[i] \gets A[i] + 1$
+            \State $s \gets s - V[i]$
+        \EndIf
+    \EndWhile
+    \State \Return $A$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
  
+ Force est de constater que l'algorithme suit {\itshape dans le pire cas} un chemin de d\'eplacements unitaires dans le m\^eme sens de la case $(S,k)$ \`a la case $(0,0)$. C'est pourquoi on effectue {\itshape au plus} $S+k$ tours de boucle. On remarque aussi que le corps de la boucle comporte uniquement des instructions \'el\'ementaires. Ce morceau de l'algorithme est ainsi en $\BigO(S+k)$.
+ 
+ Par ailleurs, l'initialisation du tableau $A$ est en $\Theta(k)$. On en d\'eduit que la compl\'exit\'e de l'algorithme de retour est en $\BigO(S+k)$. \todo{Complexit\'e totale ? que le retour ? spatiale ?}
 \end{enumerate}
 
 
