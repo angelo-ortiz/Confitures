@@ -341,8 +341,48 @@ Quant \`a la complexit\'e spatiale, on se sert de deux structures de donn\'ees g
 \end{enumerate}
 
 \subsection*{Question 5}
+On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A indiquant le nombre de bocaux pris pour chaque type de capacit\'es.
+
 \begin{enumerate}[a)]
- \item \todo{Reprendre ici}
+ \item Dans un premier temps, on d\'ecide de placer dans chaque case du tableau $M[s,i]$, un tableau $A$ indiquant les bocaux pris pour la capacit\'e totale $s$ et des capacit\'es de bocaux prises parmi $V[1],\dotsc,V[i]$. 
+ 
+ Pour ce faire, on effectue quelques modifications dans l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $S \times k$. \todo{Ce qui suit est faux} Puis l'affectation de la case $M[s][i]$ \`a la ligne 5 devient un appel \`a la proc\'edure \textproc{SetMsi}($V$, $M$, $s$, $i$). Cette derni\`ere reprend la logique de la fonction \textproc{GetMsi}, sauf que l'on cr\'ee le tableau $A$ pour la case correspondante au lieu renvoyer le nombre total de bocaux utilis\'es. 
+ 
+ \begin{algorithm}
+%\caption{AlgoProgDyn}
+\begin{algorithmic}[1]
+\Function{GetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
+    \State $A$ : integer array
+    \If {$s = 0$} 
+        \State \Return 0
+    \ElsIf {$s < 0$} 
+        \State \Return $+\infty$
+    \ElsIf {$i = 0$} 
+        \State \Return $+\infty$
+    \Else
+        \State $A \gets M[s][i]$
+        \State \Return $\sum_{j=1}^{i} A[j]$
+    \EndIf
+\EndFunction
+\Statex
+\Function{SetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
+    \State $A$: integer array filled with $i$ zeros
+    \If {$s > 0$ and $i > 0$}
+        \State $left \gets \Call{GetMsi}{V, M, s, i-1}$
+        \State $up \gets \Call{GetMsi}{V, M, s-V[i], i}+1$
+        \If {$left < up$}
+            \State $A[1\dotsc i-1] \gets M[s][i-1]$
+        \Else
+            \State $A[1\dotsc i] \gets M[s-V[i]][i]$
+            \State $A[i] \gets A[i] + 1$
+        \EndIf
+    \EndIf
+    \State $M[s][i] \gets A$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+ 
+ 
 \end{enumerate}
 
 
