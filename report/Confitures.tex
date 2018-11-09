@@ -389,7 +389,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \caption{AlgoProgDynRet}
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
-\Function{ConfitureBackwards}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $S \times k$ integer matrix}
+\Function{ConfitureBackward}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $S \times k$ integer matrix}
     \State $A$: integer array fileld with $k$ zeros
     \State $s, i$: integers
     \State $s \gets S$
@@ -408,6 +408,8 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+%{\bfseries N.B.} Il est important de remarquer que, \'etant donn\'ee l'ordre des tests, cet algorithme privil\'egie la solution utilisant le plus grand nombre de bocaux de capacit\'es distinctes.
  
  Force est de constater que l'algorithme suit {\itshape dans le pire cas} un chemin de d\'eplacements unitaires dans le m\^eme sens de la case $(S,k)$ \`a la case $(0,0)$. C'est pourquoi on effectue {\itshape au plus} $S+k$ tours de boucle. On remarque aussi que le corps de la boucle comporte uniquement des instructions \'el\'ementaires. Ce morceau de l'algorithme est ainsi en $\BigO(S+k)$.
  
