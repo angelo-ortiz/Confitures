@@ -31,6 +31,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[T1]{fontenc}
+\usepackage[titletoc]{appendix}
 
 % ********* Graphics definition *******
 \usepackage[pdftex]{graphicx} % required to import graphic files
@@ -41,6 +42,7 @@
 \algnewcommand\AND{\textbf{and}\xspace}
 \algnewcommand\OR{\textbf{or}\xspace}
 \newcommand{\BigO}{\mathcal{O}}
+\renewcommand{\appendixname}{Annexe}
 
 \pagestyle{plain} % on headers or footers on the first page
 
@@ -78,8 +80,33 @@
 \newpage
 
 \section{Introduction}
+Sur un forum de cuisine, on pourrait trouver une question portant sur le nombre minimal de pots n\'ecessaires pour la pr\'eservation d'une certaine quantit\'e de confiture pr\'epar\'ee. Il est important de remplir au complet chaque bocal afin de prolonger au maximum le temps de conservation du produit. Mais la capacit\'e des bocaux n'est pas la m\^eme pour tous. C'est pourquoi on veut proposer des algorithmes r\'esolvant cette question : on se fixe pour objectif d'utiliser le moins possible de bocaux.
 
+Pour d\'efinir ce probl\`eme, on dispose des donn\'ees suivantes. Il y a $S$ d\'ecigrammes de confiture que l'on doit verser dans des bocaux vides. On compte aussi plusieurs bocaux de diverses capacit\'es que l'on range en $k$ classes : chaque classe de bocal correspond \`a une capacit\'e distincte. On appellera {\itshape syst\`eme de capacit\'es} l'ensemble des capacit\'es dont on dispose. On note ces $k$ capacit\'es par un tableau $V$ de taille $k$ num\'erot\'e par ordre croissant :
+\begin{itemize}[\textbullet]
+ \item $V[1] < V[2] < \cdots < V[k]$ ; et
+ \item chaque capacit\'e $V[i]$ est exprim\'ee par la quantit\'e en d\'ecigrammes que l'on peut mettre dans un bocal.
+\end{itemize}
 
+\smallskip
+On se fixe aussi certaines contraintes qui garantissent l'existence d'une solution au probl\`eme :
+\begin{itemize}[\textbullet]
+ \item la quantit\'e $S$ est un nombre entier de d\'ecigrammes ;
+ \item la capacit\'e minimal d'un bocal est 1 d\'ecigramme, i.e.\ $V[1] = 1$ ; et
+ \item on dispose d'une tr\`es grande quantit\'e (suppos\'ee ainsi illimit\'ee) de bocaux de chacune des capacit\'es.
+\end{itemize}
+En effet, en tenant compte des trois hypoth\`eses, on remarque que l'on peut toujours verser la totalit\'e de confiture dans des pots de 1 d\'ecigramme.
+
+\bigskip
+Notre objectif est de remplir le moins possible de bocaux et qu'ils soient tous remplis exactement \`a sa capacit\'e maximale. Ainsi, \'etant donn\'es :
+\begin{itemize}
+ \item un syst\`eme de $k$ capacit\'es $V[i] \in \mathbb{N}$, $i \in \{1,\dotsc,k\}$ avec $V[1]=1$,
+ \item et une quantit\'e totale $S \in \mathbb{N}$ de confiture,
+\end{itemize}
+le but est de d\'eterminer le nombre minimum de bocaux tels que la somme de leurs capacit\'es est \'egale \`a $S$. On cherche donc \`a retourner un couple $(n,A)$, o\`u $n$ est le nombre de bocaux utiilis\'es et $A$ est un tableau de taille $k$ tel que $A[i]$ repr\'esente le nombre de bocaux de capacit\'e $V[i]$ \`a remplir au complet. On a ainsi que $n = \sum_{i=1}^{k} A[i]$.
+
+\bigskip
+Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de trois algorithmes r\'esolvant le probl\`eme d\'ecrit ci-dessus. Dans un premier temps, on formalise le probl\`eme et propose plusieurs algorithmes dont on fera l'analyse de complexit\'e. Dans un deuxi\`eme temps, on impl\'emente ces algorithmes au moyen du langage de programmation Python afin de v\'erifier exp\'erimentalement les complexit\'es trouv\'ees pre\'ec\'edemment.
 
 \newpage
 \part{Partie th\'eorique}
@@ -87,26 +114,22 @@
 \section{Algorithme I : Recherche exhaustive}
 
 \subsection*{Question 1}
-Soit la propri\'et\'e suivante \( P(s) : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1..k]$.
-
+Soit la propri\'et\'e suivante \( P_{1}(s) : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1..k]$.
 Montrons-la par r\'ecurrence forte sur $s$.
 
-{\bfseries N.B.} On utilisera dans la suite des questions la sigle {\itshape IE} pour instruction \'el\'ementaire.
-
 \subsubsection*{Preuve}
-\underline{Cas n\'egatif} : Pour $s < 0$, la quantit\'e de confiture est n\'egative. Dans ce cas-l\`a, on ne peut pas remplir les bocaux, i.e.\ le nombre de bocaux est infini. 
-
-Par ailleurs, dans le corps de l'algorithme, on rentre dans le bloc \texttt{then} du premier branchement conditionnel et renvoie bien $+\infty$. De plus, on n'a effectu\'e que des {\itshape IE} en nombre fini.
-
+\underline{Cas n\'egatif} : Pour $s < 0$, la quantit\'e de confiture est n\'egative. Dans ce cas-l\`a, on ne peut pas remplir les bocaux et on dit que le nombre de bocaux est infini. 
+Par ailleurs, dans le corps de l'algorithme, on rentre dans le bloc \texttt{then} du premier branchement conditionnel et renvoie bien $+\infty$. De plus, on n'a effectu\'e que des instructions \'el\'ementaires en nombre fini.
 De ces faits, \texttt{RechercheExhaustive} est valide et se termine.
 
-\underline{Base} : Pour \( s = 0\), la quantit\'e de confiture est nulle. Aussi, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{then} du deuxi\`eme branchement conditionnel. Donc, on renvoie $0$, ce qui est correct puisque aucun bocal ne doit \^etre rempli. 
+\medskip
+\underline{Base} : Pour \( s = 0\), la quantit\'e de confiture est nulle. Aussi, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{then} du deuxi\`eme branchement conditionnel. Donc, on renvoie $0$, ce qui est correct puisque aucun bocal ne doit \^etre rempli.
 
-De la m\^eme mani\`ere que dans le cas o\`u $s<0$, on montre ici que l'algorithme se termine car la suite d'instructions effectu\'ees ne comporte que des {\itshape IE}.
+De la m\^eme mani\`ere que dans le cas o\`u $s<0$, on montre ici que l'algorithme se termine car la suite d'instructions effectu\'ees ne comporte que des instructions \'el\'ementaires.
+De ces faits, $P_{1}(0)$ est vraie.
 
-De ces faits, $P(0)$ est vraie.
-
-\underline{Induction} : Supposons \( P(s) \) vraie pour tout \( s < s_0 \), pour un $s_0>0$ fix\'e. Montrons \( P(s_0) \) vraie.
+\medskip
+\underline{Induction} : Supposons \( P_{1}(s) \) vraie pour tout \( s < s_0 \), pour un $s_0>0$ fix\'e. Montrons \( P_{1}(s_0) \) vraie.
 
 Comme $s_0 > 0$, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{else} du deuxi\`eme branchement conditionnel. \todo{Continue}
 
@@ -124,12 +147,12 @@ On ne rentre pas dans le branchement conditionnel. Donc, on renvoie le maximum d
 	
 	Dans la deuxi\`eme partie de la question 3, on a montr\'e une formule calculant $E_{i,j}$, c'est-\`a-dire la taille maximale d'une s\'equence de taille $j-i+1$ avec $i<j$, ce qui est bien le cas ici. On sait que cette formule est transcrite dans le code de la fonction \texttt{tailleMaxRec}. De plus, on vient de montrer que la valeur de retour de la fonction est finie et correspond au maximum des deux arguments d\'ecrits ci-dessus. De ces faits, $P(p_0)$ est vraie.
 	
-	
+\medskip
 \underline{Conclusion} : 
 \begin{equation*}
 \left .\begin{array}{l}
-P(0) \text{ vraie } \\
-\forall s_0 \geq 1, [(\forall s < s_0, P(s)) \Rightarrow P(s_0) ]
+P_{1}(0) \text{ vraie } \\
+\forall s_0 \geq 1, [(\forall s < s_0, P_{1}(s)) \Rightarrow P_{1}(s_0) ]
 \end{array} \right \}
 \left .\begin{array}{l}
 \forall s \in \mathbb{N}, \texttt{RechercheExhaustive}(k,V,s) \\
@@ -138,24 +161,23 @@ P(0) \text{ vraie } \\
 \end{equation*}
 
 \subsubsection*{Cas particulier}
-D'apr\`es le r\'esultat pr\'ec\'edant, on a que l'algorithme est valide et se termine lorsqu'il est appel\'e par l'appel initial \texttt{RechercheExhaustive}$(k,V,S)$, o\`u $S \in \mathbb{N}$ est la quantit\'e de confiture dans le cadre de ce projet. 
-
+D'apr\`es le r\'esultat pr\'ec\'edant, pour $s = S \in \mathbb{N}$ (la quantit\'e de confiture dans le cadre de ce projet), on a que l'algorithme est valide et se termine lorsqu'il est appel\'e par l'appel initial \texttt{RechercheExhaustive}$(k,V,S)$. 
 
 \subsection*{Question 2}
 Soient $b(s)$ et $c(s)$ les suites d\'efinies par
-\[ b(s) = \begin{cases} 
+\begin{equation*}
+\left .b(s) = \begin{cases} 
       0 & \text{si } s = 0 \\
       2 & \text{si } s = 1 \\
       2\cdot b(s-2) + 2 & \text{si } s\geq 2 
-   \end{cases}
-\]
-et
-\[ c(s) = \begin{cases} 
+   \end{cases} \right.
+   \text{ et }
+\left .c(s) = \begin{cases} 
       0 & \text{si } s = 0 \\
       2 & \text{si } s = 1 \\
       2\cdot c(s-1) + 2 & \text{si } s\geq 2 
-   \end{cases}
-\]
+   \end{cases} \right.
+\end{equation*}
 Soit $a(s)$ le nombre d'appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
 
 \begin{enumerate}[a)]
@@ -167,16 +189,16 @@ Soit $a(s)$ le nombre d'appels r\'ecursifs effectu\'es par \texttt{RechercheExha
    \end{cases}
 \]
 
-\item Soit la propri\'ete suivante $Q(s), s\geq 0$: $ b(s) \leq a(s) \leq c(s) $.
-
+\item Soit la propri\'ete suivante $P_{2}(s), s\geq 0$: $ b(s) \leq a(s) \leq c(s) $.
 Montrons-la par r\'ecurrence d'ordre 2 sur $s$. 
 
 \subsubsection*{Preuve}
-\underline{Base} : Pour \( s = 0\), on a $b(0) = a(0) = c(0) = 0 $. Donc, $P(0)$ est vraie.
+\underline{Base} : Pour \( s = 0\), on a $b(0) = a(0) = c(0) = 0 $. Donc, $P_{2}(0)$ est vraie.
 
-Pour \( s = 1\), on a $b(1) = a(1) = c(1) = 2 $. Donc, $P(1)$ est vraie.
+Pour \( s = 1\), on a $b(1) = a(1) = c(1) = 2 $. Donc, $P_{2}(1)$ est vraie.
 
-\underline{Induction} : Supposons \( P(s-2) \) et \( P(s-1) \) vraies pour un \( s \geq 2 \) fix\'e. Montrons \( P(s) \) vraie.
+\medskip
+\underline{Induction} : Supposons \( P_{2}(s-2) \) et \( P_{2}(s-1) \) vraies pour un \( s \geq 2 \) fix\'e. Montrons \( P_{2}(s) \) vraie.
 
 Par hypoth\`eses de r\'ecurrence, on a : 
 \begin{alignat}{1}
@@ -191,7 +213,7 @@ a(s) &= a(s-2) + a(s-1) + 2 \\
 c(s) &= 2\cdot c(s-1) + 2
 \end{alignat}
 
-\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes\todo{pourquoi ?}, les \'equations (1) et (2) deviennent
+\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes (c.f.\ annexe \ref{appendix:suites}), les \'equations (1) et (2) deviennent
 \begin{alignat*}{1}
 b(s-2) &\leq a(s-2) \leq c(s-1) \\
 b(s-2) &\leq a(s-1) \leq c(s-1)
@@ -205,36 +227,38 @@ Il en r\'esulte que
 En rempla\c{c}ant les d\'efinitions donn\'ees en (3), (4) et (5) dans (6), on obtient
 $ b(s) \leq a(s) \leq c(s) $.
 
+\medskip
 \underline{Conclusion} : 
 \begin{equation*}
 \left .\begin{array}{l}
-Q(0) \text{ et } Q(1) \text{ vraies } \\
-\forall s \geq 2, [(Q(s-2) \text{ et } Q(s-1)) \Rightarrow Q(s) ]
+P_{2}(0) \text{ et } P_{2}(1) \text{ vraies } \\
+\forall s \geq 2, [(P_{2}(s-2) \text{ et } P_{2}(s-1)) \Rightarrow P_{2}(s) ]
 \end{array} \right \}
 \left .\begin{array}{l}
 \forall s \in \mathbb{N}, b(s) \leq a(s) \leq c(s)
 \end{array}\right .
 \end{equation*}
 
-\item Soit la propri\'ete suivante \( R(s) \), $s \geq 0$ : $c(s) = 2^{s+1} - 2$.
-
+\item Soit la propri\'ete suivante \( P_{3}(s) \), $s \geq 0$ : $c(s) = 2^{s+1} - 2$.
 Montrons-la par r\'ecurrence faible sur s.
 
 \subsubsection*{Preuve}
-\underline{Base} : Pour \( s = 0\), on a $c(0) = 0 $. De plus, $ 2^{0+1} - 2 = 2^1 - 2 = 0$. Donc, $R(0)$ est vraie.
+\underline{Base} : Pour \( s = 0\), on a $c(0) = 0 $. De plus, $ 2^{0+1} - 2 = 2^1 - 2 = 0$. Donc, $P_{3}(0)$ est vraie.
 
-\underline{Induction} : Supposons \( R(s) \) vraie pour un \( s \geq 0 \) fix\'e. Montrons \( R(s+1) \) vraie.
+\medskip
+\underline{Induction} : Supposons \( P_{3}(s) \) vraie pour un \( s \geq 0 \) fix\'e. Montrons \( P_{3}(s+1) \) vraie.
 
 On a $ s+1 \geq 1 $. 
 Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$. Or $c(s) = 2^{s+1} - 2$.
 
-Donc, $c(s+1) = 2 \cdot (2^{s+1} - 2) + 2 = 2^{s+2} - 2$. D'o\`u, $R(s+1)$ est vraie.
+Donc, $c(s+1) = 2 \cdot (2^{s+1} - 2) + 2 = 2^{s+2} - 2$. D'o\`u, $P_{3}(s+1)$ est vraie.
 
+\medskip
 \underline{Conclusion} : 
 \begin{equation*}
 \left .\begin{array}{l}
-R(0) \text{ vraie } \\
-\forall s \geq 0, [R(s) \Rightarrow R(s+1) ]
+P_{3}(0) \text{ vraie } \\
+\forall s \geq 0, [P_{3}(s) \Rightarrow P_{3}(s+1) ]
 \end{array} \right \}
 \left .\begin{array}{l}
 \forall s \in \mathbb{N}, c(s) = 2^{s+1} - 2
@@ -250,8 +274,7 @@ D'apr\`es la question b), on a $ b(s) \leq a(s) \leq c(s) $.
 De ces faits, $ 2^{\lceil \frac{s}{2} \rceil + 1} - 2 \leq a(s) \leq 2^{s+1} - 2 $.
 
 Consid\'erons seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$ pour le calcul de la complexit\'e temporelle de l'algorithme.
-
-Donc, la complexit\'e pour le syst\`eme de 2 capacit\'es minimales est donn\'ee par $a(s)$. Ainsi, la complexit\'e est exponentielle en $S$, la quantit\'e de confiture \`a disposition. \todo{quid du cas g\'en\'eral ?}
+Donc, la complexit\'e pour le syst\`eme des deux capacit\'es minimales est donn\'ee par $a(s)$. Ainsi, la complexit\'e est exponentielle en $S$, \`a savoir la quantit\'e de confiture \`a notre disposition.
 
 \end{enumerate}
 
@@ -651,6 +674,96 @@ On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \
 	
 	On en d\'eduit la droite de r\'egression de $\dfrac{CIter(n)}{n^3}$ en fonction de $n$ : $\\\Delta : y = \num{8.842541E-12}x - \num{6.164326E-08}$. On remarque l'ordre de grandeur de la pente de la droite : $\num{8.842541E-12} \ll 1$. Ceci implique que la fonction est bien constante de valeur $\num{6.9601546E-08}$. 
 	%On remarque que la fonction $\dfrac{CIter(n)}{n^3}$ est constante compte tenu que les points forment la droite $\Delta : y = \num{7.3965667e-08}$ avec un \'ecart type ${\sigma = \num{5.8075249e-09}}$.
+
+\newpage
+\begin{appendices}
+ \section{Suites croissantes}
+ \label{appendix:suites}
+ On rappelle la d\'efinition des suites $b(s)$ et $c(s)$ comme suit :
+\begin{equation*}
+\left .b(s) = \begin{cases} 
+      0 & \text{si } s = 0 \\
+      2 & \text{si } s = 1 \\
+      2\cdot b(s-2) + 2 & \text{si } s\geq 2 
+   \end{cases} \right.
+   \text{ et }
+\left .c(s) = \begin{cases} 
+      0 & \text{si } s = 0 \\
+      %2 & \text{si } s = 1 \\
+      2\cdot c(s-1) + 2 & \text{si } s\geq 1 
+   \end{cases} \right.
+\end{equation*}
+
+Montrons que les deux suites sont croissantes.
+
+\subsection*{Suite $b(s)$}
+Soit la propri\'et\'e suivante $Q_{1}(s), s \geq 0$ : $b(s) \leq b(s+1)$.
+Montrons-la par r\'ecurrence d'ordre 2 sur $s$
+
+\subsubsection*{Preuve}
+\underline{Base} : On a $b(0) = 0 \leq 2 = b(1) \leq 2\cdot 0 + 2 = b(2)$. 
+Donc, la propri\'et\'e est v\'erifi\'ee aux rangs 0 et 1.
+
+\medskip
+\underline{Induction} : Supposons $Q_{1}(s-2)$ et $Q_{1}(s-1)$ vraies pour un $s \geq 2$ fix\'e. 
+Montrons $Q_{1}(s)$ vraie.
+
+\smallskip
+Par hypoth\`ese de r\'ecurrence, $b(s-2) \leq b(s-1)$. D'o\`u, $2\cdot b(s-2)+2 \leq 2\cdot b(s-1)+2$.
+Or, par d\'efinition, $b(s+1) = 2\cdot b(s-1) + 2$.
+Donc, $b(s) \leq b(s+1)$, i.e.\ la propri\'et\'e est v\'erifi\'ee au rang $s$.
+
+\medskip
+\underline{Conclusion} : 
+\begin{equation*}
+\left .\begin{array}{l}
+Q_{1}(0) \text{ et } Q_{1}(1) \text{ vraies } \\
+\forall s \geq 2, [(Q_{1}(s-2) \text{ et } Q_{1}(s-1)) \Rightarrow Q_{1}(s) ]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall s \in \mathbb{N}, b(s) \leq b(s+1)
+\end{array}\right .
+\end{equation*}
+
+On remarque que ceci correspond \`a la d\'efinition d'une suite croissante. \hfill\ensuremath{\blacksquare}
+
+\subsection*{Suite $c(s)$}
+Soit la propri\'et\'e suivante $Q_{2}(s), s \geq 0$ : $c(s) \geq 0$.
+Montrons-la par r\'ecurrence faible sur $s$.
+
+\subsubsection*{Preuve}
+\underline{Base} : Pour $s = 0$, on a $c(0) = 0 \geq 0$. 
+Donc, la propri\'et\'e est v\'erifi\'e aux rang 0.
+
+\medskip
+\underline{Induction} : Supposons $Q_{2}(s)$ vraie pour un $s \geq 0$ fix\'e. 
+Montrons $Q_{2}(s+1)$ vraie.
+
+\smallskip
+Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$.
+Or, par hypoth\`ese de r\'ecurrence, $c(s) \geq 0$. D'o\`u, $2\cdot c(s)+2 \geq 2$.
+Donc, $c(s+1) \geq 2 \geq 0$. On en d\'eduit par transitivit\'e que la propri\'et\'e est v\'erifi\'ee au rang $s+1$.
+
+\medskip
+\underline{Conclusion} : 
+\begin{equation*}
+\left .\begin{array}{l}
+Q_{2}(0) \text{ vraie } \\
+\forall s \geq 0, [Q_{2}(s) \Rightarrow Q_{2}(s+1) ]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall s \in \mathbb{N}, c(s) \geq 0
+\end{array}\right .
+\end{equation*}
+
+Par ailleurs, on a $c(s) = 2\cdot c(s-1) + 2, s \geq 1$. D'o\`u, $c(s) \geq 2\cdot c(s-1)$.
+Comme cette suite est positive, on sait que $2\cdot c(s-1) \geq c(s)$. Donc, par transitivit\'e, $c(s) \geq c(s-1)$. Autrement dit, pour tout $s \geq 0$, $c(s+1) \geq c(s)$. 
+\hfill\ensuremath{\blacksquare}
+
+\newpage
+\section{Complexit\'e de \texttt{RechercheExhaustive} dans le cas g\'en\'eral}
+
+\end{appendices}
 	
 \printindex
 \end{document}
