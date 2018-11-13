@@ -304,7 +304,7 @@ m(s,i) =
 \]
 
 \subsubsection*{Preuve}
-Soit $s$ la capacit\'e de confiture \`a traiter. Deux cas sont possibles :
+Soit $s$ la capacit\'e de confiture \`a traiter. Deux cas sont possibles :\todo{r\'e currence double s, puis i}
 \begin{enumerate}[i)]
  \item \underline{$s = 0$ :} Dans ce cas-l\`a, il n'y a pas de confiture \`a pr\'eserver. On n'utilise donc aucun bocal, i.e.\ on a $m(0,i) = 0$. \hfill\ensuremath{\blacksquare}
  \item \underline{$s \neq 0$ :} Puisque $m(s,i) = +\infty$ pour toute quantit\'e $s < 0$, la relation de r\'ecurrence ne concerne dans ce cas-l\`a que les quantit\'es $s > 0$. De m\^eme, on a $m(s,0) = +\infty$ pour toute quantit\'e $s \geq 1$. Donc, on ne consid\`ere que les $i > 0$.
@@ -336,7 +336,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
 \Function{Main}{$k$: integer, $V$: $k$-integer array, $S$: integer}
-    \State $M$: $S \times k$ integer matrix
+    \State $M$: $S \times k$ integer matrix filled with $+\infty$
     \For{$s=0$ to $S$}
         \For{$i=0$ to $k$}
             \State $M[s][i] \gets $ \Call{GetMsi}{$V$, $M$, $s$, $i$}
@@ -352,6 +352,8 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
         \State \Return $+\infty$
     \ElsIf {$i = 0$} 
         \State \Return $+\infty$
+    \ElsIf {$M[s][i] < +\infty$}
+    	\State \Return $M[s][i]$
     \Else 
         \State \Return $\min$(\Call{GetMsi}{$V$, $M$, $s$, $i-1$}, \Call{GetMsi}{$V$, $M$, $s-V[i]$, $i$} + 1)
     \EndIf
