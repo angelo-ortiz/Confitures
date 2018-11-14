@@ -42,6 +42,8 @@ def getMsi(V, M, s, i):
 		return inf
 	elif i == 0:
 		return inf
+	elif M[s][i] != 0:
+		return M[s][i]
 	else:
 		return min(getMsi(V,M,s,i-1), getMsi(V,M,s-V[i-1],i)+1)
 
