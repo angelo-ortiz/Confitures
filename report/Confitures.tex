@@ -466,12 +466,37 @@ De ces trois faits, on en d\'eduit que la complexit\'e de l'algorithme est en $\
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
  
- Par conditions du probl\`eme, $g$ et $o$ sont solutions du probl\`eme, i.e.\ elles utilisent toute la confiture mise \`a disposition. On en d\'eduit que les sommes pond\'er\'ees des capacit\'es, avec les quantit\'es de bocaux pour chaque capacit\'e comme poids, sont \'egales.
+ D'apr\'es la sous-question pr\'ec\'edente, on a $o_l \geq g_l$ pour tout $l$ dans $\{j+1,\dotsc, k\}$ et, plus exactement, $o_l = g_l$. En effet, il n'existe pas de $l_0 \in \{j+1,\dotsc, k\}$ tel que $o_l_0 > g_l_0$ et, puisque l'algorithme glouton choisit le nombre maximum possible de bocaux de capacit\'e $V[l_0]$, $o_l_0 \leq g_l_0$.
  
- \item \todo{reprendre ici}
+ Donc, on a \( \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i\) et \( \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i = \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i\). De ces faits, \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ 
+ \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\).
+ 
+ On sait que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot g_i \geq 0\), d'o\`u \( V[j]\cdot g_j \leq \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\). Donc, \( V[i]\cdot (g_i - o_i) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). Or $g_i - o_i \geq 1$ car ce sont des entiers naturels. Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ 
+ \item D'apr\`es la sous-question pr\'ec\'edente, on a 
+ \begin{alignat*}[1]
+ 	V[j] &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \\
+ 		 &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot (d-1) \\
+ 		 &\leq (d-1)\cdot \displaystyle\sum_{i=1}^{j-1} 2^{i-1} \\
+ 		 &\leq (d-1)\cdot \frac{d^{j-1}-1}{d-1}
+ 	d^{j-1}	 &\leq d^{j-1}-1 & \text{car } d-1 \geq 1
+ \end{alignat*}
+ On arrive donc \`a une contradiction. 
+ \item D'apr\`es les conditions du probl\`eme, on a \( V[l]\cdot d = V[l+1] \), d'o\`u \( 0 = -V[l]\cdot d + V[l+1] \).
+ Donc, \( V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot (o_l-d) + V[l+1]\cdot (o_{l+1} + 1)\), i.e.\ \( V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot o_l' + V[l+1]\cdot o_{l+1}'\).
+  
+  Par ailleurs, on a $o_i' = o_i $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. De ces faits, ( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i' = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton-compatible}
 \end{itemize}
 
+\subsection*{Question 10}
+Montrons que tout syst\`eme de capacit\'es $V$ avec $k = 2$ est glouton-compatible.
 
+On a montr\'e dans la question pr\'ec\'edente que le syst\`eme Expo est glouton-compatible.
+
+Soit $V = [1, p]$, o\`u $p > 1$, un syst\`eme de capacit\'es. On remarque que ce syst\`eme est un syst\`eme Expo avec $k = 2$ et $d = p \geq 2$.
+
+De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
 
 \newpage
 \part{Mise en \oe uvre}
