@@ -114,7 +114,7 @@ Notre objectif est de remplir le moins possible de bocaux et qu'ils soient tous 
 le but est de d\'eterminer le nombre minimum de bocaux tels que la somme de leurs capacit\'es est \'egale \`a $S$. On cherche donc \`a retourner un couple $(n,A)$, o\`u $n$ est le nombre de bocaux utiilis\'es et $A$ est un tableau de taille $k$ tel que $A[i]$ repr\'esente le nombre de bocaux de capacit\'e $V[i]$ \`a remplir au complet. On a ainsi que $n = \sum_{i=1}^{k} A[i]$.
 
 \bigskip
-Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de trois algorithmes r\'esolvant le probl\`eme d\'ecrit ci-dessus. Dans un premier temps, on formalise le probl\`eme et propose plusieurs algorithmes dont on fera l'analyse de complexit\'e. Dans un deuxi\`eme temps, on impl\'emente ces algorithmes au moyen du langage de programmation Python afin de v\'erifier exp\'erimentalement les complexit\'es trouv\'ees pre\'ec\'edemment.
+Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de trois algorithmes r\'esolvant le probl\`eme d\'ecrit ci-dessus. Dans un premier temps, on formalise le probl\`eme et propose plusieurs algorithmes dont on fera l'analyse de complexit\'e. Dans un deuxi\`eme temps, on impl\'emente ces algorithmes au moyen du langage de programmation Python afin de v\'erifier exp\'erimentalement les complexit\'es trouv\'ees pre\'c\'edemment.
 
 \newpage
 \part{Partie th\'eorique}
@@ -457,7 +457,21 @@ Puis, la premi\`ere boucle \texttt{for} est effectu\'ee \( n-1 \) fois et \`a ch
 Finalement, on effectue deux boucles l'une \`a l'int\'erieur de l'autre. La boucle imbriqu\'ee consiste en le calcul du maximum de deux expressions. Les op\'erations arithm\'etiques n'\'etant pas d'instructions repr\'esentatives, la premi\`ere d'entre elles comprend deux {\itshape IE}. En ce qui concerne le deuxi\`eme argument, le nombre d'{\itshape IE} effectu\'ees est \( 2p \). Donc, le nombre d'{\itshape IE} r\'ealis\'ees dans cette partie est \( \\c = \sum_{p=1}^{n-1}\sum_{i=1}^{n-p}{2p+2} = \sum_{p=1}^{n-1}{(2p+2)(n-p)} = 2\sum_{p=1}^{n-1}{[p(n-1)+n-p^2]} \). D'o\`u, \( c = (n-1)^2n + 2(n-1)n - \dfrac{(n-1)n(2n-1)}{3} = \dfrac{(n-1)n(n+4)}{3} \). Donc, la complexit\'e de cette partie est en $\Theta(n^3)$.
 
 De ces trois faits, on en d\'eduit que la complexit\'e de l'algorithme est en $\Theta(n^3)$.
-%Le co\^ut en temps d'ex\'ecution du calcul de l
+
+\subsection*{Question 9}
+\begin{itemize}[a)]
+ \item Montrons qu'il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ tel que $o_j < g_j$.
+ 
+ D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j$ tel que $o_j < g_j$ car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ remplissant ladite condition.
+ 
+ \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ 
+ Par conditions du probl\`eme, $g$ et $o$ sont solutions du probl\`eme, i.e.\ elles utilisent toute la confiture mise \`a disposition. On en d\'eduit que les sommes pond\'er\'ees des capacit\'es, avec les quantit\'es de bocaux pour chaque capacit\'e comme poids, sont \'egales.
+ 
+ \item \todo{reprendre ici}
+\end{itemize}
+
+
 
 \newpage
 \part{Mise en \oe uvre}
