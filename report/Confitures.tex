@@ -108,13 +108,13 @@ En effet, en tenant compte des trois hypoth\`eses, on remarque que l'on peut tou
 \bigskip
 Notre objectif est de remplir le moins possible de bocaux et qu'ils soient tous remplis exactement \`a sa capacit\'e maximale. Ainsi, \'etant donn\'es :
 \begin{itemize}
- \item un syst\`eme de $k$ capacit\'es $V[i] \in \mathbb{N}$, $i \in \{1,\dotsc,k\}$ avec $V[1]=1$,
+ \item un syst\`eme de $k$ capacit\'es $V[i] \in \mathbb{N}$, $i \in \{1,\dotsc,k\}$, avec $V[1]=1$,
  \item et une quantit\'e totale $S \in \mathbb{N}$ de confiture,
 \end{itemize}
-le but est de d\'eterminer le nombre minimum de bocaux tels que la somme de leurs capacit\'es est \'egale \`a $S$. On cherche donc \`a retourner un couple $(n,A)$, o\`u $n$ est le nombre de bocaux utiilis\'es et $A$ est un tableau de taille $k$ tel que $A[i]$ repr\'esente le nombre de bocaux de capacit\'e $V[i]$ \`a remplir au complet. On a ainsi que $n = \sum_{i=1}^{k} A[i]$.
+le but est de d\'eterminer le nombre minimum de bocaux tels que la somme de leurs capacit\'es est \'egale \`a $S$. On cherche donc \`a retourner un couple $(n,A)$, o\`u $n$ est le nombre de bocaux utilis\'es et $A$ est un tableau de taille $k$ tel que $A[i]$ repr\'esente le nombre de bocaux de capacit\'e $V[i]$ \`a remplir au complet. On a ainsi que $n = \sum_{i=1}^{k} A[i]$.
 
 \bigskip
-Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de trois algorithmes r\'esolvant le probl\`eme d\'ecrit ci-dessus. Dans un premier temps, on formalise le probl\`eme et propose plusieurs algorithmes dont on fera l'analyse de complexit\'e. Dans un deuxi\`eme temps, on impl\'emente ces algorithmes au moyen du langage de programmation Python afin de v\'erifier exp\'erimentalement les complexit\'es trouv\'ees pre\'c\'edemment.
+Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de trois algorithmes r\'esolvant le probl\`eme d\'ecrit ci-dessus. Dans un premier temps, on formalise le probl\`eme et propose plusieurs algorithmes dont on fera l'analyse de complexit\'e. Dans un deuxi\`eme temps, on impl\'emente ces algorithmes au moyen du langage de programmation Python afin de v\'erifier exp\'erimentalement les complexit\'es trouv\'ees pr\'ec\'edemment.
 
 \newpage
 \part{Partie th\'eorique}
@@ -126,9 +126,9 @@ Soit la propri\'et\'e suivante \( P_{1}(s) : \) \texttt{RechercheExhaustive}$(k,
 Montrons-la par r\'ecurrence forte sur $s$.
 
 \subsubsection*{Preuve}
-\underline{Cas n\'egatif} : Pour $s < 0$, la quantit\'e de confiture est n\'egative. Dans ce cas-l\`a, on ne peut pas remplir les bocaux et on dit que le nombre de bocaux est infini. 
+\underline{Cas n\'egatif} : Pour $s < 0$, la quantit\'e de confiture est n\'egative. Dans ce cas, on ne peut pas remplir les bocaux et on dit que le nombre de bocaux est infini. 
 Par ailleurs, dans le corps de l'algorithme, on rentre dans le bloc \texttt{then} du premier branchement conditionnel et renvoie bien $+\infty$. De plus, on n'a effectu\'e que des instructions \'el\'ementaires en nombre fini.
-De ces faits, \texttt{RechercheExhaustive} est valide et se termine.
+De ces faits, \texttt{RechercheExhaustive} est valide et se termine dans le cas n\'egatif.
 
 \medskip
 \underline{Base} : Pour \( s = 0\), la quantit\'e de confiture est nulle. Aussi, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{then} du deuxi\`eme branchement conditionnel. Donc, on renvoie $0$, ce qui est correct puisque aucun bocal ne doit \^etre rempli.
@@ -139,11 +139,11 @@ De ces faits, $P_{1}(0)$ est vraie.
 \medskip
 \underline{Induction} : Supposons \( P_{1}(s) \) vraie pour tout \( s < s_0 \), pour un $s_0>0$ fix\'e. Montrons \( P_{1}(s_0) \) vraie.
 
-Comme la quantit\'e de confiture $s_0$ est positive, on a besoin d'{\itshape au moins} un bocal o\`u la verser. On remarque qu'il n'y a pas de contrainte sur ce premier bocal. Pour s'assurer de bien calculer le nombre minimum de bocaux \`a remplir, on essaie donc toutes les capacit\'es possibles pour le premier bocal, puis on r\'esout les probl\`emes r\'ecursifs induits. Aussi, il suffit de choisir la configuration optimale parmi les $k$ possibles.
+Comme la quantit\'e de confiture $s_0$ est positive, on a besoin d'{\itshape au moins} un bocal o\`u la verser. On remarque qu'il n'y a pas de contrainte sur ce premier bocal. Pour s'assurer de bien calculer le nombre minimum de bocaux \`a remplir, on essaie donc toutes les capacit\'es possibles pour le premier bocal, puis on r\'esout le probl\`eme r\'ecursif induit par chacune d'entre elles. De cette mani\`ere il suffit de choisir la configuration optimale parmi les $k$ possibles.
 
 Par ailleurs, en ce qui concerne l'algorithme \texttt{RechercheExhaustive}, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{else} du deuxi\`eme branchement conditionnel, puisque $s_0 > 0$. On sait que la capacit\'e minimum est 1 \si{dg}. On en d\'eduit que le nombre {\itshape maximum} de bocaux \`a utiliser est $s_0$. 
 
-On cherche \`a am\'eliorer la solution de d\'epart. Pour ce faire, on teste chaque capacit\'e $V[i], i \in \{1, \dotsc, k \}$, pour le premier bocal \`a remplir. Il reste ainsi $s_0-V[i]$ d\'ecigrammes de confiture \`a verser. D'apr\`es les conditions du probl\`eme, $V[i] \geq 1$, d'o\`u $s_0-V[i] < s_0$. Par hyporh\`ese de r\'ecurrence, \texttt{RechercheExhaustive}$(k,V,s)$, avec $s=s_0-V[i]$, se termine et est valide. On rajoute 1 \`a cette solution en raison du premier choix. On teste ensuite si cette derni\`ere am\'eliore la solution courante ; le cas \'ech\'eant, on met \`a jour la solution courante. On r\'ep\`ete ce proc\'ed\'e pour chacune des capacit\'es du tableau $V[1..k]$. 
+On cherche \`a am\'eliorer la solution de d\'epart. Pour ce faire, on teste chaque capacit\'e $V[i], i \in \{1, \dotsc, k \}$, pour le premier bocal \`a remplir. Il reste ainsi $s_0-V[i]$ d\'ecigrammes de confiture \`a verser. D'apr\`es les conditions du probl\`eme, $V[i] \geq 1$, d'o\`u $s_0-V[i] < s_0$. Par hyporh\`ese de r\'ecurrence, \texttt{RechercheExhaustive}$(k,V,s)$, o\`u $s=s_0-V[i]$, se termine et est valide. On rajoute 1 \`a cette solution en raison du premier choix. On teste ensuite si cette solution am\'eliore la solution courante et, le cas \'ech\'eant, on la met \`a jour. On r\'ep\`ete ce proc\'ed\'e pour chacune des capacit\'es du tableau $V[1..k]$. 
 
 Comme mentionn\'e pr\'ec\'edemment, \`a la fin de l'examen des $k$ capacit\'es pour le premier bocal, on se retrouve avec la solution optimale. 
 \'Etant donn\'e que l'appel \texttt{RechercheExhaustive}$(k, V, s_0)$ renvoie cette solution optimale, il est valide. 
@@ -177,12 +177,11 @@ Soient $b(s)$ et $c(s)$ les suites d\'efinies par
    \text{ et }
 \left .c(s) = \begin{cases} 
       0 & \text{si } s = 0 \\
-      2 & \text{si } s = 1 \\
-      2\cdot c(s-1) + 2 & \text{si } s\geq 2 
+      2\cdot c(s-1) + 2 & \text{si } s\geq 1 
    \end{cases} \right.
 \end{equation*}
 
-Supposons que les seules capacit\'es de bocal disponibles sont 1 \si{dg} et 2 \si{dg}. Soit $a(s)$ le nombre d'appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
+Supposons que les seules capacit\'es de bocal disponibles soient 1 \si{dg} et 2 \si{dg}. Soit $a(s)$ le nombre d'appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
 
 \begin{enumerate}[a)]
 \item La suite $a(s)$ est d\'efinie par
@@ -228,7 +227,7 @@ Il en r\'esulte que
 2\cdot b(s-2) + 2 &\leq a(s-2) + a(s-1) + 2 \leq 2\cdot c(s-1) + 2
 \end{alignat}
 
-En rempla\c{c}ant les expressions (3), (4) et (5) en (6), on obtient
+En rempla\c{c}ant les expressions (3), (4) et (5) en (6), on obtient les in\'egalit\'es cherch\'ees : 
 $ b(s) \leq a(s) \leq c(s) $.
 
 \medskip
@@ -253,7 +252,7 @@ Montrons-la par r\'ecurrence faible sur s.
 \underline{Induction} : Supposons \( P_{3}(s) \) vraie pour un \( s \geq 0 \) fix\'e. Montrons \( P_{3}(s+1) \) vraie.
 
 On a $ s+1 \geq 1 $. 
-Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$. Or $c(s) = 2^{s+1} - 2$.
+Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$. Or, par hypoth\`ese de r\'ecurrence, $c(s) = 2^{s+1} - 2$.
 
 Donc, $c(s+1) = 2 \cdot (2^{s+1} - 2) + 2 = 2^{s+2} - 2$. D'o\`u, $P_{3}(s+1)$ est vraie.
 
@@ -278,20 +277,20 @@ D'apr\`es la question b), on a $ b(s) \leq a(s) \leq c(s) $.
 De ces faits, $ 2^{\lceil \frac{s}{2} \rceil + 1} - 2 \leq a(s) \leq 2^{s+1} - 2 $.
 
 Pour le calcul de la complexit\'e temporelle de l'algorithme, consid\'erons seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
-La complexit\'e pour ce syst\`eme de deux capacit\'es est donn\'ee par $a(S)$. Ainsi, la complexit\'e est en $\Omega(\sqrt{2}^S)$ et $\mathcal{O}(2^S)$.
+La complexit\'e pour ce syst\`eme de deux capacit\'es est donn\'ee par $a(S)$. La complexit\'e est ainsi en $\Omega\left(\sqrt{2}^S\right)$ et $\mathcal{O}(2^S)$.
 
 \end{enumerate}
 
 \section{Algorithme II : Programmation dynamique}
 
 \subsection*{Question 3}
-On note $m(S)$ le nombre minimum de bocaux pour $S$ d\'ecigrammes de confiture et un tableau d capacit\'es $V$. On d\'efinit une famille de probl\`emes interm\'ediaires de la fa\c{c}on suivante : \'etant donn\'es un entier $s$ et un entier $i \in \{1, \dotsc, k\}$, on note $m(s,i)$ le nombre minimum de bocaux n\'ecessaires pour une quantit\'e totale $s$ en ne choisissant des bocaux que dans le syst\`eme de capacit\'es $V[1],V[2],\dotsc,V[i]$.
+On note $m(S)$ le nombre minimum de bocaux pour $S$ d\'ecigrammes de confiture et un tableau de capacit\'es $V$. On d\'efinit une famille de probl\`emes interm\'ediaires de la fa\c{c}on suivante : \'etant donn\'es un entier $s$ et un entier $i \in \{1, \dotsc, k\}$, on note $m(s,i)$ le nombre minimum de bocaux n\'ecessaires pour une quantit\'e totale $s$ en ne choisissant des bocaux que dans le syst\`eme de capacit\'es $V[1],V[2],\dotsc,V[i]$.
 
 On pose :
 \begin{align*}
  m(0,i) &= 0 & \forall & i \in \{1,\dotsc, k\} \\
  m(s,0) &= +\infty & \forall & s \geq 1 \\
- m(s,i) &= + \infty & \forall & i \in \{1,\dotsc,k\} \forall s < 0
+ m(s,i) &= + \infty & \forall & i \in \{1,\dotsc,k\} \text{ }\forall s < 0
 \end{align*}
 
 \begin{enumerate}[a)]
@@ -307,13 +306,15 @@ m(s,i) =
 \end{cases}
 \]
 
+Montrons-la par r\'ecurrence.
+
 \subsubsection*{Preuve}
 Soit $s$ la capacit\'e de confiture \`a traiter. Deux cas sont possibles :\todo{r\'e currence double s, puis i}
 \begin{enumerate}[i)]
- \item \underline{$s = 0$ :} Dans ce cas-l\`a, il n'y a pas de confiture \`a pr\'eserver. On n'utilise donc aucun bocal, i.e.\ on a $m(0,i) = 0$. \hfill\ensuremath{\blacksquare}
- \item \underline{$s \neq 0$ :} Puisque $m(s,i) = +\infty$ pour toute quantit\'e $s < 0$, la relation de r\'ecurrence ne concerne dans ce cas-l\`a que les quantit\'es $s > 0$. De m\^eme, on a $m(s,0) = +\infty$ pour toute quantit\'e $s \geq 1$. Donc, on ne consid\`ere que les $i > 0$.
+ \item \underline{$s = 0$ :} Dans ce cas, il n'y a pas de confiture \`a pr\'eserver. On n'utilise donc aucun bocal, i.e.\ on a $m(0,i) = 0$. \hfill\ensuremath{\blacksquare}
+ \item \underline{$s \neq 0$ :} Puisque $m(s,i) = +\infty$ pour toute quantit\'e $s < 0$, la relation de r\'ecurrence ne concerne dans ce cas que les quantit\'es $s > 0$. De m\^eme, on a $m(s,0) = +\infty$ pour toute quantit\'e $s \geq 1$. Donc, on ne consid\`ere que les $i > 0$.
  
-\'Etant donn\'e le syst\`eme de capacit\'es $V[1], V[2], \dotsc, V[i]$, deux choix sont possibles : soit on utiilise des bocaux de capacit\'e $V[i]$, soit on ne s'en sert pas. 
+\'Etant donn\'e le syst\`eme de capacit\'es $V[1], V[2], \dotsc, V[i]$, deux choix sont possibles : soit on utilise des bocaux de capacit\'e $V[i]$, soit on ne s'en sert pas. 
 
 D'un c\^ot\'e, le premier choix implique forc\'ement l'utilisation d'{\itshape au moins} un bocal de ladite capacit\'e. Ceci se traduit math\'ematiquement par $m(s-V[i],i)+1$. 
 
@@ -329,9 +330,9 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \begin{enumerate}[a)]
  \item Soit le couple $(s,i) \in \{1,\dotsc,S\} \times \{1,\dotsc,k\}$. D'apr\`es la relation de r\'ecurrence prouv\'ee ci-dessus, pour calculer $m(s,i)$, on n\'ecessite des valeurs stock\'ees dans les cases $(s,i-1)$ et $(s-V[i],i)$, si $s-V[i] \geq 0$. Autrement dit, la case \`a gauche et toutes les cases au-dessus de $(s,i)$ doivent \^etre trait\'ees pr\'ealablement au calcul de la valeur de cette derni\`ere.
  
- Cela implique que le remplissage du tableau doit commencer \`a la case $(0,0)$ et aller jusqu'\`a la case $(S,k)$ en suivant un parcours matriciel. Cependant, ce parcours peut se faire par lignes ou par colonnes. 
+ Cela implique que le remplissage du tableau doit commencer \`a la case $(0,0)$ et aller jusqu'\`a la case $(S,k)$ en suivant un parcours matriciel. Ce parcours peut donc se faire soit par lignes, soit par colonnes. 
  
- {\bfseries N.B.} Dans le cadre du projet, le parcours s\'equentiel des lignes a \'et\'e s\'electionn\'e.
+ {\bfseries N.B.} Dans le cadre du projet, on a s\'electionn\'e le parcours s\'equentiel des lignes.
  
  \item On d\'eduit des deux questions pr\'ec\'edentes un algorithme \texttt{AlgoProgDyn} qui pour un syst\`eme de $k$ capacit\'es $V[1],V[2],\dotsc,V[k]$ et une quantit\'e $S$ de confiture retourne $m(S)$. En voici le pseudocode :
  
@@ -340,7 +341,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
 \Function{Main}{$k$: integer, $V$: $k$-integer array, $S$: integer}
-    \State $M$: $S \times k$ integer matrix filled with $+\infty$
+    \State $M$: $(S+1) \times (k+1)$ integer matrix filled with $+\infty$
     \For{$s=0$ to $S$}
         \For{$i=0$ to $k$}
             \State $M[s][i] \gets $ \Call{GetMsi}{$V$, $M$, $s$, $i$}
@@ -349,7 +350,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
     \State \Return $M[S][k]$\Comment{The value of $m(S)$}
 \EndFunction
 \Statex
-\Function{GetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer matrix, $s$: integer, $i$: integer}
+\Function{GetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer matrix, $s$: integer, $i$: integer}
     \If {$s = 0$} 
         \State \Return 0
     \ElsIf {$s < 0$} 
@@ -365,10 +366,10 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \end{algorithmic}
 \end{algorithm}
 
- \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case du tableau $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chaque case on acc\`ede au plus 3 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les deux restantes pour la lecture des cases dont on cherche le minimum des valeurs.
-La complexit\'e temporelle de l'algorithme est donc en $\Theta(S\cdot k)$.
+ \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case du tableau $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chaque case on acc\`ede au plus 5 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les quatre restantes pour les lectures des cases dont on cherche le minimum des valeurs. Par ailleurs, la cr\'eation et l'initialisation de la matrice $M$ se font en $\Theta(S\cdot k)$.
+Donc, la complexit\'e temporelle de l'algorithme est en $\Theta(S\cdot k)$.
 
-Quant \`a la complexit\'e spatiale, on se sert de deux structures de donn\'ees gourmandes, \`a savoir le tableau $V$ de $k$ cases d'entiers et la matrice $M$ de $S\cdot k$ cases d'entiers. En prenant comme taille de base celle d'un entier, on r\'ealise que la complexit\'e spatiale de l'algorithme est aussi en $\Theta(S\cdot k)$.
+Quant \`a la complexit\'e spatiale, on se sert de deux structures de donn\'ees gourmandes, \`a savoir le tableau $V$ de $k$ cases d'entiers et la matrice $M$ de $(S+1)\cdot (k+1)$ cases d'entiers. En prenant comme taille de base celle d'un entier, on r\'ealise que la complexit\'e spatiale de l'algorithme est aussi en $\Theta(S\cdot k)$.
 \end{enumerate}
 
 \subsection*{Question 5}
@@ -377,12 +378,12 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \begin{enumerate}[a)]
  \item Dans un premier temps, on d\'ecide de placer dans chaque case du tableau $M[s,i]$, un tableau $A$ indiquant les bocaux pris pour la capacit\'e totale $s$ et des capacit\'es de bocaux prises parmi $V[1],\dotsc,V[i]$. 
  
- Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $S \times k$. \todo{Ce qui suit est faux} Puis l'affectation de la case $M[s][i]$ \`a la ligne 5 devient un appel \`a la proc\'edure \textproc{SetMsi}($V$, $M$, $s$, $i$). Cette derni\`ere reprend la logique de la fonction \textproc{GetMsi}, sauf que l'on cr\'ee le tableau $A$ pour la case correspondante au lieu renvoyer le nombre total de bocaux utilis\'es. 
+ Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. \todo{Ce qui suit est faux} Puis l'affectation de la case $M[s][i]$ \`a la ligne 5 devient un appel \`a la proc\'edure \textproc{SetMsi}($V$, $M$, $s$, $i$). Cette derni\`ere reprend la logique de la fonction \textproc{GetMsi}, sauf que l'on cr\'ee le tableau $A$ pour la case correspondante au lieu renvoyer le nombre total de bocaux utilis\'es. 
  
  \begin{algorithm}
 %\caption{AlgoProgDyn}
 \begin{algorithmic}[1]
-\Function{GetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
+\Function{GetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer array matrix, $s$: integer, $i$: integer}
     \State $A$: integer array
     \If {$s = 0$} 
         \State \Return 0
@@ -396,7 +397,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
     \EndIf
 \EndFunction
 \Statex
-\Function{SetMsi}{$V$: $k$-integer array, $M$: $S \times k$ integer array matrix, $s$: integer, $i$: integer}
+\Function{SetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer array matrix, $s$: integer, $i$: integer}
     \State $A$: integer array filled with $i$ zeros
     \If {$s > 0$ \AND $i > 0$}
         \State $left \gets \Call{GetMsi}{V, M, s, i-1}$
@@ -418,7 +419,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \caption{AlgoProgDynRet}
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
-\Function{ConfitureBackward}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $S \times k$ integer matrix}
+\Function{ConfitureBackwards}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $(S+1) \times (k+1)$ integer matrix}
     \State $A$: integer array fileld with $k$ zeros
     \State $s, i$: integers
     \State $s \gets S$
@@ -445,58 +446,103 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
  Par ailleurs, l'initialisation du tableau $A$ est en $\Theta(k)$. On en d\'eduit que la compl\'exit\'e de l'algorithme de retour est en $\BigO(S+k)$. \todo{Complexit\'e totale ? que le retour ? spatiale ?}
 \end{enumerate}
 
+\subsection*{Question 6}
+ \todo{Comp poly ???}
+
 \section{Algorithme III : Cas particulier et algorithme glouton}
 
 \subsection*{Question 7}
-On utilisera un tableau \`a deux dimensions pour stocker les valeurs de \( E_{i,j} \). De plus, on consid\`erera que l'acc\`es \`a une case du tableau et l'appel \`a \texttt{e()} sont des instructions \'el\'ementaires  compte tenu de leur complexit\'e : $\Theta(1)$. 
+ \todo{Pseudo code}
 
-Tout d'abord, on initialise la premi\`ere case de la premi\`ere ligne \`a 0. Donc, la complexit\'e de cette partie est en $\Theta(1)$. 
-
-Puis, la premi\`ere boucle \texttt{for} est effectu\'ee \( n-1 \) fois et \`a chaque tour de boucle on ne r\'ealise que des {\itshape IE}. Donc, la complexit\'e de cette partie est en $\Theta(n)$. 
-
-Finalement, on effectue deux boucles l'une \`a l'int\'erieur de l'autre. La boucle imbriqu\'ee consiste en le calcul du maximum de deux expressions. Les op\'erations arithm\'etiques n'\'etant pas d'instructions repr\'esentatives, la premi\`ere d'entre elles comprend deux {\itshape IE}. En ce qui concerne le deuxi\`eme argument, le nombre d'{\itshape IE} effectu\'ees est \( 2p \). Donc, le nombre d'{\itshape IE} r\'ealis\'ees dans cette partie est \( \\c = \sum_{p=1}^{n-1}\sum_{i=1}^{n-p}{2p+2} = \sum_{p=1}^{n-1}{(2p+2)(n-p)} = 2\sum_{p=1}^{n-1}{[p(n-1)+n-p^2]} \). D'o\`u, \( c = (n-1)^2n + 2(n-1)n - \dfrac{(n-1)n(2n-1)}{3} = \dfrac{(n-1)n(n+4)}{3} \). Donc, la complexit\'e de cette partie est en $\Theta(n^3)$.
-
-De ces trois faits, on en d\'eduit que la complexit\'e de l'algorithme est en $\Theta(n^3)$.
+\subsection*{Question 8}
+ \todo{contre exemple}
 
 \subsection*{Question 9}
-\begin{itemize}[a)]
+\begin{enumerate}[a)]
  \item Montrons qu'il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ tel que $o_j < g_j$.
  
- D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j$ tel que $o_j < g_j$ car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ remplissant ladite condition.
+ \subsubsection*{Preuve}
+ D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j \in \{1,\dotsc,k\}$ tel que $o_j < g_j$, car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j \in \{1,\dotsc,k\}$ remplissant ladite condition.
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
  
- D'apr\'es la sous-question pr\'ec\'edente, on a $o_l \geq g_l$ pour tout $l$ dans $\{j+1,\dotsc, k\}$ et, plus exactement, $o_l = g_l$. En effet, il n'existe pas de $l_0 \in \{j+1,\dotsc, k\}$ tel que $o_l_0 > g_l_0$ et, puisque l'algorithme glouton choisit le nombre maximum possible de bocaux de capacit\'e $V[l_0]$, $o_l_0 \leq g_l_0$.
+ \subsubsection*{Preuve}
+ D'apr\'es la question pr\'ec\'edente, on a $o_l \geq g_l$ pour tout $l$ dans $\{j+1,\dotsc, k\}$. De plus, puisque au cours de l'algorithme glouton on choisit le nombre maximum possible de bocaux de capacit\'e $V[l]$, on a $o_l \leq g_l$. On en d\'eduit que $o_l = g_l$.
  
- Donc, on a \( \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i\) et \( \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i = \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i\). De ces faits, \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ Donc, on a :
+ \begin{alignat}{1}
+    \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i \\
+    \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i
+ \end{alignat}
+ 
+ En soustrayant (8) de (7), on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\).
  
- On sait que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot g_i \geq 0\), d'o\`u \( V[j]\cdot g_j \leq \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\). Donc, \( V[i]\cdot (g_i - o_i) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). Or $g_i - o_i \geq 1$ car ce sont des entiers naturels. Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ \subsubsection*{Preuve}
+ On sait que 
+ \begin{equation*}
+    \displaystyle\sum_{i=1}^{j-1} V[i]\cdot g_i \geq 0.
+ \end{equation*}
+
+ En utilisant le r\'esultat de la question pr\'ec\'edente, il en r\'esulte que
+ \begin{equation*}
+    V[j]\cdot g_j \leq \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i. 
+ \end{equation*}
  
- \item D'apr\`es la sous-question pr\'ec\'edente, on a 
- \begin{alignat*}[1]
+ D'o\`u, 
+ \begin{equation*}
+    V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i. 
+ \end{equation*}
+ Or $g_j - o_j \geq 1$ d'apr\`es la question a) et le fait que ce sont des entiers naturels.
+ Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ 
+ \item Supposons que $o_i \leq d-1$ pour tout $i \in \{1,\dotsc,j-1\}$. D'apr\`es la question pr\'ec\'edente, on a 
+ \begin{alignat*}{2}
  	V[j] &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \\
  		 &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot (d-1) \\
  		 &\leq (d-1)\cdot \displaystyle\sum_{i=1}^{j-1} 2^{i-1} \\
- 		 &\leq (d-1)\cdot \frac{d^{j-1}-1}{d-1}
+ 		 &\leq (d-1)\cdot \frac{d^{j-1}-1}{d-1} \\
  	d^{j-1}	 &\leq d^{j-1}-1 & \text{car } d-1 \geq 1
  \end{alignat*}
- On arrive donc \`a une contradiction. 
- \item D'apr\`es les conditions du probl\`eme, on a \( V[l]\cdot d = V[l+1] \), d'o\`u \( 0 = -V[l]\cdot d + V[l+1] \).
- Donc, \( V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot (o_l-d) + V[l+1]\cdot (o_{l+1} + 1)\), i.e.\ \( V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot o_l' + V[l+1]\cdot o_{l+1}'\).
+ On arrive donc \`a une contradiction, i.e.\ il existe un indice \(l \in \{1,\dotsc,j-1\}\) tel que $o_l \geq d$.
+ 
+ \item Posons la suite $o'$ telle que $o_{l}' = o_l-d, o_{l+1}' = o_{l+1}+1$ et $o_i' = o_i$ pour tout $i \neq l$ et $i \neq l+1$. Montrons que $o'$ est une solution du probl\`eme.
+ 
+ \subsubsection*{Preuve}
+ D'apr\`es les conditions du probl\`eme, on a
+ \begin{equation*}
+    V[l]\cdot d = V[l+1].
+ \end{equation*}
+ 
+ D'o\`u, 
+ \begin{equation*}
+    0 = -V[l]\cdot d + V[l+1].
+ \end{equation*}
+ 
+ Donc, 
+ \begin{equation*}
+    V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot (o_l-d) + V[l+1]\cdot (o_{l+1} + 1),
+ \end{equation*}
+ i.e.\ 
+ \begin{equation*}
+    V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot o_l' + V[l+1]\cdot o_{l+1}'.
+ \end{equation*}
   
-  Par ailleurs, on a $o_i' = o_i $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. De ces faits, ( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i' = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton-compatible}
-\end{itemize}
+  Par ailleurs, on a $o_i = o_i' $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. 
+  
+  De ces faits, \( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i'\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton-compatible}
+\end{enumerate}
 
 \subsection*{Question 10}
-Montrons que tout syst\`eme de capacit\'es $V$ avec $k = 2$ est glouton-compatible.
+ Montrons que tout syst\`eme de capacit\'es $V$ avec $k = 2$ est glouton-compatible.
 
-On a montr\'e dans la question pr\'ec\'edente que le syst\`eme Expo est glouton-compatible.
+ \subsubsection*{Preuve}
+ On a montr\'e dans la question pr\'ec\'edente que le syst\`eme {\bfseries Expo} est glouton-compatible.
 
-Soit $V = [1, p]$, o\`u $p > 1$, un syst\`eme de capacit\'es. On remarque que ce syst\`eme est un syst\`eme Expo avec $k = 2$ et $d = p \geq 2$.
+ Soit $V = [1, p]$, o\`u $p > 1$, un syst\`eme de capacit\'es quelconque. On remarque que ce syst\`eme est un syst\`eme {\bfseries Expo} avec $k = 2$ et $d = p \geq 2$.
 
-De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
+ De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
 
 \newpage
 \part{Mise en \oe uvre}
