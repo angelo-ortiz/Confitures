@@ -1,12 +1,20 @@
 from tools import readFile
-from dynamic_programming import AlgoProgDyn
 from exhaustive_search import RechercheExhaustive
+from dynamic_programming import AlgoProgDyn
+from greedy_algorithm import AlgoGlouton
 
 fn = input("Enter the filename: ")
+re = input("Would you like to execute the exhaustive search algorithm (y/n): ")
+re.lower()
 S, k, V = readFile(fn)
-print(f"S={S}")
-print(f"k={k}")
-print(f"V={V}")
+# print(f"S={S}")
+print("S={}".format(S))
+# print(f"k={k}")
+print("k={}".format(k))
+# print(f"V={V}")
+print("V={}".format(V))
 AlgoProgDyn(k, V, S)
-RechercheExhaustive(k, V, S)
+AlgoGlouton(k, V, S)
+if re == "y" or re == "yes":
+	RechercheExhaustive(k, V, S)
 

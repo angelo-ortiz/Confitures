@@ -17,8 +17,10 @@ def printSolution(name, n, A=None, V=None, verbose=False):
 	"""
 	int [x list[int]] ->
 	"""
-	print(f"L'algorithme {name} a trouve une solution optimale utilisant {n} bocaux")
+	# print(f"L'algorithme {name} a trouve une solution optimale utilisant {n} bocaux")
+	print("L'algorithme {} a trouve une solution optimale utilisant {} bocaux".format(name, n))
 	if verbose and A:
 		print("capacite\tquantite")
 		for i in range(len(V)):
-			print(f"{V[i]}\t\t{A[i]}")
+			# print(f"{V[i]}\t\t{A[i]}")
+			print("{}\t\t{}".format(V[i], A[i]))

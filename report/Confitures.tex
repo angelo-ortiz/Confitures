@@ -420,7 +420,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
 \Function{ConfitureBackwards}{$k$: integer, $V$: $k$-integer array, $S$: integer, $M$: $(S+1) \times (k+1)$ integer matrix}
-    \State $A$: integer array fileld with $k$ zeros
+    \State $A$: integer array filled with $k$ zeros
     \State $s, i$: integers
     \State $s \gets S$
     \State $i \gets k$
@@ -452,10 +452,38 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \section{Algorithme III : Cas particulier et algorithme glouton}
 
 \subsection*{Question 7}
- \todo{Pseudo code}
+Voici le pseudo-code de l'algorithme \texttt{AlgoGlouton} :
+\begin{algorithm}
+\caption{AlgoGlouton}
+\begin{algorithmic}[1]
+\Require $k \geq 1$ \AND $S \geq 0$
+\Function{Main}{$k$: integer, $V$: $k$-integer array, $S$: integer}
+	\State $A$: integer array filled with $k$ zeros
+    \State $s, i, n$: integers
+    \State $s \gets S$
+    \State $i \gets k$
+    \State $n \gets 0$
+    \While{$s \neq 0$}
+    	\State $A[i] \gets s /_V[i] $
+        \State $s \gets s \bmod V[i] $
+        \State $n \gets n+A[i]$
+        \State $i \gets i-1$
+    \EndWhile
+    \State \Return $(n, A)$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement quatre instruction \'el\'ementaires. De plus, on effectue au plus $k$ tours de boucle car, pour la $k$-i\`eme it\'eration, on utilise de bocaux de capacit\'e 1 \si{dg} et on peut ainsi verser toute la confiture restante dans des bocaux de cette capacit\'e. De ces faits, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans le pire des cas est en $\BigO(k)$.
 
 \subsection*{Question 8}
- \todo{contre exemple}
+ On dit qu'un syst\`eme de capacit\'es est {\bfseries glouton-compatible} si, pour ce syst\`eme de capacit\'es, l'algorithme \texttt{AlgoGlouton} produit la solution optimale quelle que soit soit la quantit\'e totale $S$.
+ Montrons qu'il existe des syst\`emes de capacit\'es qui ne sont pas glouton-compatibles.
+ 
+ \subsubsection*{Preuve}
+ Il suffit de donner un exemple de syst\`eme de capacit\'es $V$ tel qu'il y a au moins une quantit\'e totale $S$ pour laquelle l'algorithme \texttt{AlgoGlouton} ne renvoie pas la solution optimale.
+ 
+ Soit le syst\`eme de capacit\'es $V = [1, 4, 5]$. Soit $S = 28$ la quantit\'e totale de confiture. L'algorithme \texttt{AlgoGlouton} produit la solution $(8, [3, 0, 5])$, alors que la solution optimale est $(6, [0, 2, 4])$, puisque 5 bocaux ne suffisent pas. Ceci est donc un contre-exemple cherch\'e.
 
 \subsection*{Question 9}
 \begin{enumerate}[a)]
