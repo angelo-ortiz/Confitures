@@ -464,7 +464,7 @@ Voici le pseudo-code de l'algorithme \texttt{AlgoGlouton} :
     \State $i \gets k$
     \State $n \gets 0$
     \While{$s \neq 0$}
-    	\State $A[i] \gets s /_V[i] $
+    	\State $A[i] \gets s \div V[i] $
         \State $s \gets s \bmod V[i] $
         \State $n \gets n+A[i]$
         \State $i \gets i-1$
@@ -474,7 +474,7 @@ Voici le pseudo-code de l'algorithme \texttt{AlgoGlouton} :
 \end{algorithmic}
 \end{algorithm}
 
-L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement quatre instruction \'el\'ementaires. De plus, on effectue au plus $k$ tours de boucle car, pour la $k$-i\`eme it\'eration, on utilise de bocaux de capacit\'e 1 \si{dg} et on peut ainsi verser toute la confiture restante dans des bocaux de cette capacit\'e. De ces faits, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans le pire des cas est en $\BigO(k)$.
+L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement quatre instructions \'el\'ementaires. De plus, on effectue au plus $k$ tours de boucle car, le cas \'ech\'eant, pour la $k$-i\`eme it\'eration, on utilise des bocaux de capacit\'e 1 \si{dg} et on peut ainsi verser toute la confiture restante dans des bocaux de cette capacit\'e. De ces faits, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans le pire des cas est en $\BigO(k)$.
 
 \subsection*{Question 8}
  On dit qu'un syst\`eme de capacit\'es est {\bfseries glouton-compatible} si, pour ce syst\`eme de capacit\'es, l'algorithme \texttt{AlgoGlouton} produit la solution optimale quelle que soit soit la quantit\'e totale $S$.
