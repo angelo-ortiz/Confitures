@@ -46,10 +46,10 @@
 \renewcommand{\appendixname}{Annexe}
 \hypersetup{
     colorlinks  = true,
-    linkcolor   = red,
+    linkcolor   = black,
     citecolor   = blue,
     urlcolor    = blue,
-    linktocpage = true
+    linktocpage = false
 }
 
 \pagestyle{plain} % on headers or footers on the first page
@@ -87,7 +87,8 @@
 
 \newpage
 
-\section{Introduction}
+\part*{Introduction}
+\addcontentsline{toc}{part}{Introduction}
 Sur un forum de cuisine, on pourrait trouver une question portant sur le nombre minimal de pots n\'ecessaires pour la pr\'eservation d'une certaine quantit\'e de confiture pr\'epar\'ee. Il est important de remplir au complet chaque bocal afin de prolonger au maximum le temps de conservation du produit. Mais la capacit\'e des bocaux n'est pas la m\^eme pour tous. C'est pourquoi on veut proposer des algorithmes r\'esolvant cette question : on se fixe pour objectif d'utiliser le moins possible de bocaux.
 
 Pour d\'efinir ce probl\`eme, on dispose des donn\'ees suivantes. Il y a $S$ d\'ecigrammes de confiture que l'on doit verser dans des bocaux vides. On compte aussi plusieurs bocaux de diverses capacit\'es que l'on range en $k$ classes : chaque classe de bocal correspond \`a une capacit\'e distincte. On appellera {\itshape syst\`eme de capacit\'es} l'ensemble des capacit\'es dont on dispose. On note ces $k$ capacit\'es par un tableau $V$ de taille $k$ num\'erot\'e par ordre croissant :
@@ -216,7 +217,7 @@ a(s) &= a(s-2) + a(s-1) + 2 \\
 c(s) &= 2\cdot c(s-1) + 2
 \end{alignat}
 
-\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes (c.f.\ annexe \hyperref[appendix:suites]{A}), les in\'egalit\'es (1) et (2) deviennent respectivement
+\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes (c.f.\ annexe \hyperref[appendix:suites]{\textcolor{red}{A}}), les in\'egalit\'es (1) et (2) deviennent respectivement
 \begin{alignat*}{1}
 b(s-2) &\leq a(s-2) \leq c(s-1) \\
 b(s-2) &\leq a(s-1) \leq c(s-1)
@@ -279,6 +280,8 @@ De ces faits, $ 2^{\lceil \frac{s}{2} \rceil + 1} - 2 \leq a(s) \leq 2^{s+1} - 2
 Pour le calcul de la complexit\'e temporelle de l'algorithme, consid\'erons seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
 La complexit\'e pour ce syst\`eme de deux capacit\'es est donn\'ee par $a(S)$. La complexit\'e est ainsi en $\Omega\left(\sqrt{2}^S\right)$ et $\mathcal{O}(2^S)$.
 
+{\bfseries N.B.} Pour la complexit\'e de cet algorithme dans le cas g\'en\'eral, regardez l'annexe \hyperref[appendix:rech_gen]{\textcolor{red}{B}}.
+
 \end{enumerate}
 
 \section{Algorithme II : Programmation dynamique}
@@ -309,12 +312,12 @@ m(s,i) =
 Montrons-la par r\'ecurrence.
 
 \subsubsection*{Preuve}
-Soit $s$ la capacit\'e de confiture \`a traiter. Deux cas sont possibles :\todo{r\'e currence double s, puis i}
+Soit $s$ la capacit\'e de confiture \`a traiter. Deux cas sont possibles :
 \begin{enumerate}[i)]
  \item \underline{$s = 0$ :} Dans ce cas, il n'y a pas de confiture \`a pr\'eserver. On n'utilise donc aucun bocal, i.e.\ on a $m(0,i) = 0$. \hfill\ensuremath{\blacksquare}
  \item \underline{$s \neq 0$ :} Puisque $m(s,i) = +\infty$ pour toute quantit\'e $s < 0$, la relation de r\'ecurrence ne concerne dans ce cas que les quantit\'es $s > 0$. De m\^eme, on a $m(s,0) = +\infty$ pour toute quantit\'e $s \geq 1$. Donc, on ne consid\`ere que les $i > 0$.
  
-\'Etant donn\'e le syst\`eme de capacit\'es $V[1], V[2], \dotsc, V[i]$, deux choix sont possibles : soit on utilise des bocaux de capacit\'e $V[i]$, soit on ne s'en sert pas. 
+\'Etant donn\'e le syst\`eme de capacit\'es $V[1], V[2], \dotsc, V[i]$, deux choix sont possibles : soit on utilise des bocaux de capacit\'e $V[i]$, soit on ne s'en sert plus. 
 
 D'un c\^ot\'e, le premier choix implique forc\'ement l'utilisation d'{\itshape au moins} un bocal de ladite capacit\'e. Ceci se traduit math\'ematiquement par $m(s-V[i],i)+1$. 
 
@@ -340,14 +343,14 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \caption{AlgoProgDyn}
 \begin{algorithmic}[1]
 \Require $k \geq 0$ \AND $S \geq 0$
-\Function{Main}{$k$: integer, $V$: $k$-integer array, $S$: integer}
+\Function{ConfitureForwards}{$k$: integer, $V$: $k$-integer array, $S$: integer}
     \State $M$: $(S+1) \times (k+1)$ integer matrix filled with $+\infty$
     \For{$s=0$ to $S$}
         \For{$i=0$ to $k$}
             \State $M[s][i] \gets $ \Call{GetMsi}{$V$, $M$, $s$, $i$}
         \EndFor
     \EndFor
-    \State \Return $M[S][k]$\Comment{The value of $m(S)$}
+    \State \Return $M[S][k]$\Comment{the value of $m(S)$}
 \EndFunction
 \Statex
 \Function{GetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer matrix, $s$: integer, $i$: integer}
@@ -357,7 +360,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
         \State \Return $+\infty$
     \ElsIf {$i = 0$} 
         \State \Return $+\infty$
-    \ElsIf {$M[s][i] < +\infty$}
+    \ElsIf {$M[s][i] < +\infty$}\Comment{$M[s][i]$ already calculated}
     	\State \Return $M[s][i]$
     \Else 
         \State \Return $\min$(\Call{GetMsi}{$V$, $M$, $s$, $i-1$}, \Call{GetMsi}{$V$, $M$, $s-V[i]$, $i$} + 1)
@@ -366,7 +369,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \end{algorithmic}
 \end{algorithm}
 
- \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case du tableau $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chaque case on acc\`ede au plus 5 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les quatre restantes pour les lectures des cases dont on cherche le minimum des valeurs. Par ailleurs, la cr\'eation et l'initialisation de la matrice $M$ se font en $\Theta(S\cdot k)$.
+ \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case du tableau $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chacune des $(S+1)\cdot (k+1)$ it\'erations de la boucle interne on acc\`ede au plus 5 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les quatre restantes pour les lectures des cases dont on cherche le minimum des valeurs. Par ailleurs, la cr\'eation et l'initialisation de la matrice $M$ se font en $\Theta(S\cdot k)$.
 Donc, la complexit\'e temporelle de l'algorithme est en $\Theta(S\cdot k)$.
 
 Quant \`a la complexit\'e spatiale, on se sert de deux structures de donn\'ees gourmandes, \`a savoir le tableau $V$ de $k$ cases d'entiers et la matrice $M$ de $(S+1)\cdot (k+1)$ cases d'entiers. En prenant comme taille de base celle d'un entier, on r\'ealise que la complexit\'e spatiale de l'algorithme est aussi en $\Theta(S\cdot k)$.
@@ -378,7 +381,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \begin{enumerate}[a)]
  \item Dans un premier temps, on d\'ecide de placer dans chaque case du tableau $M[s,i]$, un tableau $A$ indiquant les bocaux pris pour la capacit\'e totale $s$ et des capacit\'es de bocaux prises parmi $V[1],\dotsc,V[i]$. 
  
- Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. \todo{Ce qui suit est faux} Puis l'affectation de la case $M[s][i]$ \`a la ligne 5 devient un appel \`a la proc\'edure \textproc{SetMsi}($V$, $M$, $s$, $i$). Cette derni\`ere reprend la logique de la fonction \textproc{GetMsi}, sauf que l'on cr\'ee le tableau $A$ pour la case correspondante au lieu renvoyer le nombre total de bocaux utilis\'es. 
+ Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. De plus, la fonction \textproc{GetMsi} est modifi\'ee de sorte \`a utiliser le tableau de bocaux utilis\'es pour chaque case de la matrice lorsque n\'ecessaire. Finalement, on remplace l'appel \`a  \textproc{GetMsi} par un appel \`a \textproc{GetA} \`a la ligne 5 de l'algorithme initial. Cette nouvelle fonction reprend la logique de la fonction \textproc{GetMsi} initiale, sauf que l'on renvoie le tableau $A$ correspondant au lieu du nombre total de bocaux utilis\'es. Voici le pseudocode des modifications effectu\'ees :
  
  \begin{algorithm}
 %\caption{AlgoProgDyn}
@@ -397,7 +400,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
     \EndIf
 \EndFunction
 \Statex
-\Function{SetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer array matrix, $s$: integer, $i$: integer}
+\Function{GetA}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer array matrix, $s$: integer, $i$: integer}
     \State $A$: integer array filled with $i$ zeros
     \If {$s > 0$ \AND $i > 0$}
         \State $left \gets \Call{GetMsi}{V, M, s, i-1}$
@@ -409,10 +412,12 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
             \State $A[i] \gets A[i] + 1$
         \EndIf
     \EndIf
-    \State $M[s][i] \gets A$
+    \State \Return $A$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+En termes de m\'emoire, chaque case $M[s][i]$, o\`u $i > 0$ contient maintenant un tableau \`a $i$ cases d'entier. Ainsi, on a $\frac{k\cdot (k+1)}{2}$ cases d'entier dans chaque ligne, i.e.\ il y a $(S+1)\cdot \frac{k\cdot (k+1)}{2}$ cases d'entier dans toute la matrice $M$. De ce fait, la complexit\'e spatiale de cet algorithme est en $\Theta(S\cdot k^2)$.
  
  \item Dans un deuxi\`eme temps, on souhaite \'eviter de copier dans chaque case du tableau $M$, les tableaux $A$ des bocaux utilis\'es. Pour ce faire, on conserve l'algorithme initial et on reconstitue {\itshape a posteriori} le tableau $A$ de la solution optimale. Voici le pseudocode du deuxi\`eme algorithme :
  \begin{algorithm}
@@ -426,7 +431,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
     \State $i \gets k$
     \While {$s \ne 0$}
         \If {$i > 0$ \AND $M[s][i] = M[s][i-1]$}
-        \Comment {no more capacity $V[i]$}
+        \Comment {no more $V[i]$-capacity jars}
             \State $i \gets i-1$
         \Else
         \Comment {$M[s][i] = M[s-V[i]][i] + 1$}
@@ -441,13 +446,16 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 
 %{\bfseries N.B.} Il est important de remarquer que, \'etant donn\'ee l'ordre des tests, cet algorithme privil\'egie la solution utilisant le plus grand nombre de bocaux de capacit\'es distinctes.
  
- Force est de constater que l'algorithme suit {\itshape dans le pire cas} un chemin de d\'eplacements unitaires dans le m\^eme sens de la case $(S,k)$ \`a la case $(0,0)$. C'est pourquoi on effectue {\itshape au plus} $S+k$ tours de boucle. On remarque aussi que le corps de la boucle comporte uniquement des instructions \'el\'ementaires. Ce morceau de l'algorithme est ainsi en $\BigO(S+k)$.
+ Force est de constater que l'algorithme suit {\itshape dans le pire cas} un chemin de d\'eplacements unitaires sans detours de la case $(S,k)$ \`a la case $(0,0)$. C'est pourquoi on effectue {\itshape au plus} $S+k$ tours de boucle. On remarque aussi que le corps de la boucle comporte uniquement des instructions \'el\'ementaires. La complexit\'e temporelle de la boucle de l'algorithme-retour est ainsi en $\BigO(S+k)$.
  
- Par ailleurs, l'initialisation du tableau $A$ est en $\Theta(k)$. On en d\'eduit que la compl\'exit\'e de l'algorithme de retour est en $\BigO(S+k)$. \todo{Complexit\'e totale ? que le retour ? spatiale ?}
+ Par ailleurs, l'initialisation du tableau $A$ est en $\Theta(k)$. Ce tableau $A$ est la seule addition en termes de m\'emoire par rapport \`a l'algorithme de base et il occupe autant de cases m\'emoire que le tableau $V$. 
+ De ces faits, les compl\'exit\'es temporelle et spatiale de l'algorithme-retour sont respectivement en $\BigO(S+k)$ et $\Theta(S\cdot k)$.
+ 
 \end{enumerate}
 
 \subsection*{Question 6}
- \todo{Comp poly ???}
+ On constate que, pour l'algorithme global, ce sont les complexit\'es de l'algorithme initial qui l'emportent, d'o\`u celles du premier algorithme sont retenues, \`a savoir des complexit\'es en $\Theta(S\cdot k)$.
+ De ce fait, on peut dire que cet algorithme est polynomial.
 
 \section{Algorithme III : Cas particulier et algorithme glouton}
 
@@ -713,6 +721,7 @@ Comme cette suite est positive, on sait que $2\cdot c(s-1) \geq c(s)$. Donc, par
 
 \newpage
 \section{Complexit\'e de \texttt{RechercheExhaustive} dans le cas g\'en\'eral}
+\label{appendix:rech_gen}
 
 \end{appendices}
 	
