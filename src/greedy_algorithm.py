@@ -2,9 +2,9 @@
 from math import inf
 from tools import printSolution
 
-def AlgoGlouton(k, V, S):
-	"""
-	int x list[int] x int -> 
+def AlgoGlouton(k, V, S, display=True):
+	""" int x list[int] x int x bool -> 
+	
 	"""
 	# A: list[int]
 	A = [0]*k
@@ -14,7 +14,8 @@ def AlgoGlouton(k, V, S):
 	n = 0
 	while s != 0:
 		A[i-1] = s // V[i-1]
-		s = s % V[i-1]
-		n = n + A[i-1]
-		i = i - 1
-	printSolution("de l'algorithme glouton", n, A, V, True)
+		s %= V[i-1]
+		n += A[i-1]
+		i -= 1
+	if display:
+		printSolution("greedy", n, A, V, True)

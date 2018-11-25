@@ -1,24 +1,40 @@
 # -*- coding: utf-8 -*-
 def readFile(fn):
-    """
-    str : filename
+    """ str -> int x int x list[int]
+    
     """
     with open(fn, "r") as f:
         args = f.readline().split()
         S, k = tuple(map(int, args))
         caps = f.readline().split()
         V = list(map(int, caps))
-        if len(V) != k:
-            print("Error: incorrect number of capacities")
-            exit(1)
         return S, k, V
 
+def writeFile(fn, line):
+    """ str x list[str] ->
+    
+    """
+    with open(fn, "w") as f:
+        f.write(line)
+
+def validateData(S, k, V):
+	""" int x int x list[int]
+	"""
+	if len(V) != k:
+		print(f"Error: the number of capacities ({len(V)}) does not match k = {k}")
+		exit(1)
+	V.sort()
+	for i in range(1, k):
+		if V[i-1] == V[i]:
+			print("Error: there are at least two equal capacities")
+			exit(1)        
+        
 def printSolution(name, n, A=None, V=None, verbose=False):
+	""" str x int x list[int] x list[int] x bool ->
+	
 	"""
-	int [x list[int]] ->
-	"""
-	print(f"L'algorithme {name} a trouve une solution optimale utilisant {n} bocaux")
+	print(f"The {name} algorithm found an optimum solution using {n} jars")
 	if verbose and A:
-		print("capacite\tquantite")
+		print("capacity\tquantity")
 		for i in range(len(V)):
 			print(f"{V[i]}\t\t{A[i]}")
