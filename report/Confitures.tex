@@ -89,6 +89,7 @@
 
 \part*{Introduction}
 \addcontentsline{toc}{part}{Introduction}
+
 Sur un forum de cuisine, on pourrait trouver une question portant sur le nombre minimal de pots n\'ecessaires pour la pr\'eservation d'une certaine quantit\'e de confiture pr\'epar\'ee. Il est important de remplir au complet chaque bocal afin de prolonger au maximum le temps de conservation du produit. Mais la capacit\'e des bocaux n'est pas la m\^eme pour tous. C'est pourquoi on veut proposer des algorithmes r\'esolvant cette question : on se fixe pour objectif d'utiliser le moins possible de bocaux.
 
 Pour d\'efinir ce probl\`eme, on dispose des donn\'ees suivantes. Il y a $S$ d\'ecigrammes de confiture que l'on doit verser dans des bocaux vides. On compte aussi plusieurs bocaux de diverses capacit\'es que l'on range en $k$ classes : chaque classe de bocal correspond \`a une capacit\'e distincte. On appellera {\itshape syst\`eme de capacit\'es} l'ensemble des capacit\'es dont on dispose. On note ces $k$ capacit\'es par un tableau $V$ de taille $k$ num\'erot\'e par ordre croissant :
@@ -206,18 +207,18 @@ Pour \( s = 1\), on a $b(1) = a(1) = c(1) = 2 $. Donc, $P_{2}(1)$ est vraie.
 
 D'apr\`es les hypoth\`eses de r\'ecurrence, on a : 
 \begin{alignat}{1}
-b(s-2) &\leq a(s-2) \leq c(s-2) \\
-b(s-1) &\leq a(s-1) \leq c(s-1)
+b(s-2) &\leq a(s-2) \leq c(s-2) \label{eq:hyp_2b1}\\
+b(s-1) &\leq a(s-1) \leq c(s-1) \label{eq:hyp_2b2}
 \end{alignat} 
 
 Par d\'efinition de ces suites r\'ecursives, on a :
 \begin{alignat}{1}
-b(s) &= 2\cdot b(s-2) + 2 \\
-a(s) &= a(s-2) + a(s-1) + 2 \\
-c(s) &= 2\cdot c(s-1) + 2
+b(s) &= 2\cdot b(s-2) + 2 \label{eq:def_2b1}\\
+a(s) &= a(s-2) + a(s-1) + 2 \label{eq:def_2b2}\\
+c(s) &= 2\cdot c(s-1) + 2 \label{eq:def_2b3}
 \end{alignat}
 
-\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes (c.f.\ annexe \hyperref[appendix:suites]{\textcolor{red}{A}}), les in\'egalit\'es (1) et (2) deviennent respectivement
+\'Etant donn\'e que les suites $b(s)$ et $c(s)$ sont croissantes (c.f.\ annexe \hyperref[appendix:suites]{\textcolor{red}{A}}), les in\'egalit\'es \eqref{eq:hyp_2b1} et \eqref{eq:hyp_2b2} deviennent respectivement
 \begin{alignat*}{1}
 b(s-2) &\leq a(s-2) \leq c(s-1) \\
 b(s-2) &\leq a(s-1) \leq c(s-1)
@@ -225,10 +226,10 @@ b(s-2) &\leq a(s-1) \leq c(s-1)
 
 Il en r\'esulte que 
 \begin{alignat}{1}
-2\cdot b(s-2) + 2 &\leq a(s-2) + a(s-1) + 2 \leq 2\cdot c(s-1) + 2
+2\cdot b(s-2) + 2 &\leq a(s-2) + a(s-1) + 2 \leq 2\cdot c(s-1) + 2 \label{eq:ineg_2b}
 \end{alignat}
 
-En rempla\c{c}ant les expressions (3), (4) et (5) en (6), on obtient les in\'egalit\'es cherch\'ees : 
+En rempla\c{c}ant les expressions \eqref{eq:def_2b1}, \eqref{eq:def_2b2} et \eqref{eq:def_2b3} en \eqref{eq:ineg_2b}, on obtient les in\'egalit\'es cherch\'ees : 
 $ b(s) \leq a(s) \leq c(s) $.
 
 \medskip
@@ -253,9 +254,23 @@ Montrons-la par r\'ecurrence faible sur s.
 \underline{Induction} : Supposons \( P_{3}(s) \) vraie pour un \( s \geq 0 \) fix\'e. Montrons \( P_{3}(s+1) \) vraie.
 
 On a $ s+1 \geq 1 $. 
-Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$. Or, par hypoth\`ese de r\'ecurrence, $c(s) = 2^{s+1} - 2$.
 
-Donc, $c(s+1) = 2 \cdot (2^{s+1} - 2) + 2 = 2^{s+2} - 2$. D'o\`u, $P_{3}(s+1)$ est vraie.
+Par d\'efinition, 
+\begin{equation}
+    c(s+1) = 2\cdot c(s) + 2 \label{eq:def_2c} 
+ \end{equation}
+
+Or, par hypoth\`ese de r\'ecurrence, 
+\begin{equation}
+    c(s) = 2^{s+1} - 2 \label{eq:hyp_2c}
+ \end{equation}
+
+En rempla\c{c}ant \eqref{eq:hyp_2c} en \eqref{eq:def_2c}, on obtient
+\begin{equation*}
+    c(s+1) = 2 \cdot (2^{s+1} - 2) + 2 = 2^{s+2} - 2
+ \end{equation*}
+
+D'o\`u, $P_{3}(s+1)$ est vraie.
 
 \medskip
 \underline{Conclusion} : 
@@ -269,13 +284,74 @@ P_{3}(0) \text{ vraie } \\
 \end{array}\right .
 \end{equation*}
 
-\item \todo{Faire}
+\item Soit la propri\'ete suivante \( P_{4}(s) \), $s \geq 0$ : $b(s) = c(\lceil \frac{s}{2} \rceil)$.
+Montrons-la par r\'ecurrence d'ordre 2 sur s.
 
-\item On d\'eduit des deux questions pr\'ec\'edentes que $ b(s) = 2^{\lceil \frac{s}{2} \rceil + 1} - 2 $.
+\subsubsection*{Preuve}
+\underline{Base} : Pour \( s = 0\), on a $b(0) = 0 = c(\lceil \frac{0}{2} \rceil)$. Donc, $P_{4}(0)$ est vraie.
+
+Pour \( s = 1\), on a $b(1) = 2 = 2\cdot 0 + 2 = c(\lceil \frac{1}{2} \rceil)$. Donc, $P_{4}(1)$ est vraie.
+
+\medskip
+\underline{Induction} : Supposons \( P_{4}(s-2) \) et \( P_{4}(s-1) \) vraies pour un \( s \geq 2 \) fix\'e. Montrons \( P_{4}(s) \) vraie.
+
+On a $s \geq 2$ et $\lceil \frac{s}{2} \rceil \geq 1$.
+
+Par d\'efinition, 
+\begin{alignat}{1}
+    b(s) &= 2\cdot b(s-2) + 2 \label{eq:def_2d1} \\
+    c\left(\left\lceil \dfrac{s}{2} \right\rceil\right) &= 2\cdot c\left(\left\lceil \dfrac{s}{2} \right\rceil - 1\right) + 2 \label{eq:def_2d2}
+\end{alignat}
+
+Or, par hypoth\`ese de r\'ecurrence, 
+\begin{equation}
+ b(s-2) = c\left(\left\lceil \dfrac{s-2}{2} \right\rceil\right) \label{eq:hyp_2d}
+\end{equation}
+ 
+En rempla\c{c}ant \eqref{eq:hyp_2d} en \eqref{eq:def_2d1}, on obtient 
+\begin{equation}
+ b(s) = 2\cdot c\left(\left\lceil \dfrac{s}{2} -1 \right\rceil\right)+2\label{eq:egal_2d1}
+\end{equation}
+
+De plus, on sait que
+\begin{equation*}
+ \forall x \in \mathbb{R}, \forall p \in \mathbb{Z}, \lceil x + p \rceil = \lceil x \rceil + p 
+\end{equation*}
+
+En particulier, pour \eqref{eq:egal_2d1} on a 
+\begin{equation}
+ b(s) = 2\cdot c\left(\left\lceil \dfrac{s}{2} \right\rceil -1\right)+2\label{eq:egal_2d2}
+\end{equation}
+
+Par transitivit\'e entre \eqref{eq:def_2d2} et \eqref{eq:egal_2d2}, on obtient bien $b(s) = c(\lceil \frac{s}{2}\rceil)$. 
+
+De ce fait, $P_{4}(s)$ est vraie.
+
+\medskip
+\underline{Conclusion} : 
+\begin{equation*}
+\left .\begin{array}{l}
+P_{4}(0) \text{ et } P_{4}(1) \text{ vraies } \\
+\forall s \geq 2, [(P_{4}(s-2) \text{ et } P_{4}(s-1)) \Rightarrow P_{4}(s) ]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall s \in \mathbb{N}, b(s) = c(\lceil \frac{s}{2}\rceil)
+\end{array}\right .
+\end{equation*}
+
+\item On d\'eduit des deux questions pr\'ec\'edentes que 
+\begin{equation*}
+ b(s) = 2^{\lceil \frac{s}{2} \rceil + 1} - 2
+\end{equation*}
+
 
 D'apr\`es la question b), on a $ b(s) \leq a(s) \leq c(s) $. 
 
-De ces faits, $ 2^{\lceil \frac{s}{2} \rceil + 1} - 2 \leq a(s) \leq 2^{s+1} - 2 $.
+De ces faits, 
+\begin{equation*}
+ 2^{\lceil \frac{s}{2} \rceil + 1} - 2 \leq a(s) \leq 2^{s+1} - 2
+\end{equation*}
+
 
 Pour le calcul de la complexit\'e temporelle de l'algorithme, consid\'erons seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(2,[1,2],s)$.
 La complexit\'e pour ce syst\`eme de deux capacit\'es est donn\'ee par $a(S)$. La complexit\'e est ainsi en $\Omega\left(\sqrt{2}^S\right)$ et $\mathcal{O}(2^S)$.
@@ -284,6 +360,7 @@ La complexit\'e pour ce syst\`eme de deux capacit\'es est donn\'ee par $a(S)$. L
 
 \end{enumerate}
 
+\newpage
 \section{Algorithme II : Programmation dynamique}
 
 \subsection*{Question 3}
@@ -331,7 +408,7 @@ Comme on cherche \`a minimiser le nombre de bocaux \`a utiliser, $m(s,i)$ doit v
 Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{0,\dotsc,S\}$ et $i \in \{0,\dotsc,k\}$, contient la valeur $m(s,i)$.
 
 \begin{enumerate}[a)]
- \item Soit le couple $(s,i) \in \{1,\dotsc,S\} \times \{1,\dotsc,k\}$. D'apr\`es la relation de r\'ecurrence prouv\'ee ci-dessus, pour calculer $m(s,i)$, on n\'ecessite des valeurs stock\'ees dans les cases $(s,i-1)$ et $(s-V[i],i)$, si $s-V[i] \geq 0$. Autrement dit, la case \`a gauche et toutes les cases au-dessus de $(s,i)$ doivent \^etre trait\'ees pr\'ealablement au calcul de la valeur de cette derni\`ere.
+ \item Soit le couple $(s,i) \in \{1,\dotsc,S\} \times \{1,\dotsc,k\}$. D'apr\`es la relation de r\'ecurrence prouv\'ee ci-dessus, pour calculer $m(s,i)$, on a besoin des valeurs stock\'ees dans les cases $(s,i-1)$ et $(s-V[i],i)$, si $s-V[i] \geq 0$. Autrement dit, la case \`a gauche et toutes les cases au-dessus de $(s,i)$ doivent \^etre trait\'ees pr\'ealablement au calcul de la valeur de cette derni\`ere.
  
  Cela implique que le remplissage du tableau doit commencer \`a la case $(0,0)$ et aller jusqu'\`a la case $(S,k)$ en suivant un parcours matriciel. Ce parcours peut donc se faire soit par lignes, soit par colonnes. 
  
@@ -381,9 +458,12 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 \begin{enumerate}[a)]
  \item Dans un premier temps, on d\'ecide de placer dans chaque case du tableau $M[s,i]$, un tableau $A$ indiquant les bocaux pris pour la capacit\'e totale $s$ et des capacit\'es de bocaux prises parmi $V[1],\dotsc,V[i]$. 
  
- Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. De plus, la fonction \textproc{GetMsi} est modifi\'ee de sorte \`a utiliser le tableau de bocaux utilis\'es pour chaque case de la matrice lorsque n\'ecessaire. Finalement, on remplace l'appel \`a  \textproc{GetMsi} par un appel \`a \textproc{GetA} \`a la ligne 5 de l'algorithme initial. Cette nouvelle fonction reprend la logique de la fonction \textproc{GetMsi} initiale, sauf que l'on renvoie le tableau $A$ correspondant au lieu du nombre total de bocaux utilis\'es. Voici le pseudocode des modifications effectu\'ees :
+ Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. De plus, la fonction \textproc{GetMsi} est modifi\'ee de sorte \`a utiliser le tableau de bocaux utilis\'es pour chaque case de la matrice lorsque n\'ecessaire. Finalement, on remplace l'appel \`a  \textproc{GetMsi} par un appel \`a \textproc{GetA} \`a la ligne 5 de l'algorithme initial. Cette nouvelle fonction reprend la logique de la fonction \textproc{GetMsi} initiale, sauf que l'on renvoie le tableau $A$ correspondant au lieu du nombre total de bocaux utilis\'es. 
  
- \begin{algorithm}
+ Voici le pseudocode des modifications effectu\'ees :
+ 
+\clearpage
+\begin{algorithm}
 %\caption{AlgoProgDyn}
 \begin{algorithmic}[1]
 \Function{GetMsi}{$V$: $k$-integer array, $M$: $(S+1) \times (k+1)$ integer array matrix, $s$: integer, $i$: integer}
@@ -420,6 +500,8 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 En termes de m\'emoire, chaque case $M[s][i]$, o\`u $i > 0$ contient maintenant un tableau \`a $i$ cases d'entier. Ainsi, on a $\frac{k\cdot (k+1)}{2}$ cases d'entier dans chaque ligne, i.e.\ il y a $(S+1)\cdot \frac{k\cdot (k+1)}{2}$ cases d'entier dans toute la matrice $M$. De ce fait, la complexit\'e spatiale de cet algorithme est en $\Theta(S\cdot k^2)$.
  
  \item Dans un deuxi\`eme temps, on souhaite \'eviter de copier dans chaque case du tableau $M$, les tableaux $A$ des bocaux utilis\'es. Pour ce faire, on conserve l'algorithme initial et on reconstitue {\itshape a posteriori} le tableau $A$ de la solution optimale. Voici le pseudocode du deuxi\`eme algorithme :
+ 
+ \clearpage
  \begin{algorithm}
 \caption{AlgoProgDynRet}
 \begin{algorithmic}[1]
@@ -457,10 +539,12 @@ En termes de m\'emoire, chaque case $M[s][i]$, o\`u $i > 0$ contient maintenant 
  On constate que, pour l'algorithme global, ce sont les complexit\'es de l'algorithme initial qui l'emportent, d'o\`u celles du premier algorithme sont retenues, \`a savoir des complexit\'es en $\Theta(S\cdot k)$.
  De ce fait, on peut dire que cet algorithme est polynomial.
 
+\newpage
 \section{Algorithme III : Cas particulier et algorithme glouton}
 
 \subsection*{Question 7}
 Voici le pseudo-code de l'algorithme \texttt{AlgoGlouton} :
+
 \begin{algorithm}
 \caption{AlgoGlouton}
 \begin{algorithmic}[1]
@@ -507,18 +591,18 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
  
  Donc, on a :
  \begin{alignat}{1}
-    \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i \\
-    \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i
+    \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i \label{eq:somme_9b1} \\
+    \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i \label{eq:somme_9b2}
  \end{alignat}
  
- En soustrayant (8) de (7), on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ En soustrayant \eqref{eq:somme_9b2} de \eqref{eq:somme_9b1}, on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\).
  
  \subsubsection*{Preuve}
  On sait que 
  \begin{equation*}
-    \displaystyle\sum_{i=1}^{j-1} V[i]\cdot g_i \geq 0.
+    \displaystyle\sum_{i=1}^{j-1} V[i]\cdot g_i \geq 0
  \end{equation*}
 
  En utilisant le r\'esultat de la question pr\'ec\'edente, il en r\'esulte que
@@ -531,7 +615,7 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
     V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i. 
  \end{equation*}
  Or $g_j - o_j \geq 1$ d'apr\`es la question a) et le fait que ce sont des entiers naturels.
- Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). \todo{inter fran\c{c}ais}
  
  \item Supposons que $o_i \leq d-1$ pour tout $i \in \{1,\dotsc,j-1\}$. D'apr\`es la question pr\'ec\'edente, on a 
  \begin{alignat*}{2}
@@ -567,7 +651,7 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
   
   Par ailleurs, on a $o_i = o_i' $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. 
   
-  De ces faits, \( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i'\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton-compatible}
+  De ces faits, \( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i'\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton compatible}
 \end{enumerate}
 
 \subsection*{Question 10}
@@ -579,7 +663,13 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
  Soit $V = [1, p]$, o\`u $p > 1$, un syst\`eme de capacit\'es quelconque. On remarque que ce syst\`eme est un syst\`eme {\bfseries Expo} avec $k = 2$ et $d = p \geq 2$.
 
  De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
+ 
+ \subsection*{Question 11}
+ Montrons que la complexit\'e de l'algorithme \texttt{TestGloutonCompatible}$(k, V)$ est en $\BigO(k)$, i.e.\ qu'il est polynomial.
 
+ \subsubsection*{Preuve}
+ \todo{montrer}
+ 
 \newpage
 \part{Mise en \oe uvre}
 
