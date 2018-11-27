@@ -9,7 +9,7 @@ def RechercheExhaustive(k, V, S, display=True):
 	# n: int
 	n = RechercheExhaustiveRec(k, V, S)
 	if display:
-		printSolution("exhaustive search", n)
+		printSolution('exhaustive search', n)
 
 def RechercheExhaustiveRec(k, V, s):
 	""" int x list[int] x int -> int

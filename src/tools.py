@@ -10,31 +10,31 @@ def readFile(fn):
         V = list(map(int, caps))
         return S, k, V
 
-def writeFile(fn, line):
+def writeLine(fn, line):
     """ str x list[str] ->
     
     """
-    with open(fn, "w") as f:
+    with open(fn, 'a') as f:
         f.write(line)
 
 def validateData(S, k, V):
 	""" int x int x list[int]
 	"""
 	if len(V) != k:
-		print(f"Error: the number of capacities ({len(V)}) does not match k = {k}")
+		print(f'Error: the number of capacities ({len(V)}) does not match k = {k}')
 		exit(1)
 	V.sort()
 	for i in range(1, k):
 		if V[i-1] == V[i]:
-			print("Error: there are at least two equal capacities")
+			print('Error: there are at least two equal capacities')
 			exit(1)        
         
 def printSolution(name, n, A=None, V=None, verbose=False):
 	""" str x int x list[int] x list[int] x bool ->
 	
 	"""
-	print(f"The {name} algorithm found an optimum solution using {n} jars")
+	print(f'The {name} algorithm found an optimum solution using {n} jars')
 	if verbose and A:
-		print("capacity\tquantity")
+		print('capacity\tquantity')
 		for i in range(len(V)):
-			print(f"{V[i]}\t\t{A[i]}")
+			print(f'{V[i]}\t\t{A[i]}')

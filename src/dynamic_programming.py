@@ -11,7 +11,7 @@ def AlgoProgDyn(k, V, S, display=True):
 	# A: list[int]
 	A = ConfitureBackwards(k, V, S, M)
 	if display:
-		printSolution("dynamic programming", M[S][k], A, V, True)
+		printSolution('dynamic programming', M[S][k], A, V, True)
 
 def ConfitureForwards(k, V, S):
 	""" int x list[int] x int -> list[list[int]]

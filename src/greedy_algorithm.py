@@ -18,4 +18,4 @@ def AlgoGlouton(k, V, S, display=True):
 		n += A[i-1]
 		i -= 1
 	if display:
-		printSolution("greedy", n, A, V, True)
+		printSolution('greedy', n, A, V, True)
