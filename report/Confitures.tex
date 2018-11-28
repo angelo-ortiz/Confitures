@@ -615,7 +615,9 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
     V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i. 
  \end{equation*}
  Or $g_j - o_j \geq 1$ d'apr\`es la question a) et le fait que ce sont des entiers naturels.
- Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). \todo{inter fran\c{c}ais}
+ Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ 
+ Cette propri\'et\'e pr\'ecise l'une des mani\`eres d'utiliser le moins possible de bocaux pour remplir une quantit\'e de confiture donn\'ee. En effet, elle consiste \`a remplir au complet tous les bocaux des plus grandes capacit\'es possibles jusqu'\`a l'arriv\'ee \`a une certaine capacit\'e. Pour cette derni\`ere, on pr\'ef\`ere ne pas remplir tous les bocaux possibles, mais de se servir plut\^ot de ceux de capacit\'e plus petite. 
  
  \item Supposons que $o_i \leq d-1$ pour tout $i \in \{1,\dotsc,j-1\}$. D'apr\`es la question pr\'ec\'edente, on a 
  \begin{alignat*}{2}
@@ -651,7 +653,14 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
   
   Par ailleurs, on a $o_i = o_i' $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. 
   
-  De ces faits, \( \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i'\), i.e.\ $o'$ est aussi une solution du probl\`eme. \todo{d\'eduire que Expo est glouton compatible}
+  De ces faits, 
+  \begin{equation*}
+   \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i',
+  \end{equation*}
+  i.e.\ $o'$ est aussi une solution optimale du probl\`eme. 
+  
+  \medskip
+  On remarque que la diff\'erence entre $o'$ et $o$ est que la premi\`ere remplace $d$ bocaux d'une certaine capacit\'e dans la deuxi\`eme solution par un bocal de la capacit\'e imm\'ediatement sup\'erieure. En r\'ep\'etant ce proc\'ed\'e un nombre fini de fois, on remplace des bocaux de petite capacit\'e par ceux de plus grande capacit\'e de sorte \`a utiliser, pour chaque plus grande capacit\'e s\'electionnable, le plus possible de bocaux. Cette m\'ethode correspondant \`a la solution $g$, on a que la solution gloutonne est optimale. On en d\'eduit que le syst\`eme {\bfseries Expo} est glouton-compatible.
 \end{enumerate}
 
 \subsection*{Question 10}
