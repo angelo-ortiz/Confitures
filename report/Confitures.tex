@@ -677,6 +677,12 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
  Montrons que la complexit\'e de l'algorithme \texttt{TestGloutonCompatible}$(k, V)$ est en $\BigO(k)$, i.e.\ qu'il est polynomial.
 
  \subsubsection*{Preuve}
+ Il y a $nbiter_ext = V[k-1]+V[k]-1 -(V[3]+2) +1 $ it\'erations de la boucle externe.
+ Or $V[3]+2 \geq 5$ et $V[k-1]+V[k]-1 \leq 2\cdot V[k] - 2$. Donc, $nbiter_ext \leq 2\cdot V[k] - 6$, i.e. le nombre d'it\'erations de la boucle externe est en $\Theta(V[k])$.
+ 
+ Par ailleurs, on effectue le m\^eme nombre d'it\'erations de la boucle interne pour chaque tour de la boucle externe, \`a savoir $k$. De plus, chaque tour de la boucle interne comporte un premier test de v\'erit\'e entre deux nombres obtenus en $\Theta(1)$ \`a savoir $V[j]$ et $S$, et un deuxi\`eme test sur deux nombres obtenus chacun au moyen d'un appel \`a \texttt{AlgoGlouton}. D'apr\`es la question 7, sa complexit\`e est en $\BigO(k)$. Donc, chaque tour de la boucle interne est fait en $\BigO(k)$.
+ 
+ De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(V[k]\cdot k^2)$. On en d\'eduit que l'algorithme est polynomial.
  \todo{montrer}
  
 \newpage
