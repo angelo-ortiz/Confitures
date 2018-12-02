@@ -1,31 +1,28 @@
 # -*- coding: utf-8 -*-
-from tools import writeLine
+from tools import generateSavePath, writeLine, timeFunction
 from exhaustive_search import RechercheExhaustive
 from dynamic_programming import AlgoProgDyn
 from greedy_algorithm import AlgoGlouton
 from math import inf
 import random
-import timeit
 
-def generateSavePath(fct, d_value, dn='data'):
+def generateBenchmarkSavePath(fct, d_value, dn='data'):
 	""" str x int -> str
     returns a string corresponding to the absolute
 	path of the function <fct>'s data file for the
 	the generator <d_value> of the system of
 	capacities
 	"""
-	from os.path import dirname, realpath, join
-	fn = fct + f'_d{d_value}.txt'
-	return join(dirname(dirname(realpath(__file__))), dn, fn)
+	return generateSavePath(fct + f'_d{d_value}.txt')
                      
-def generateV(d, k):
+def generateExpoSystem(d, k):
 	""" int x int -> list[int]
 	returns a system of <k> capacities generated
 	by <d>
 	"""
-	# V : list[int]
+	# V: list[int]
 	V = [1]
-	# val : int
+	# val: int
 	val = 1
 	for i in range(k-1):
 		val *= d
@@ -50,16 +47,6 @@ def generateSvalues():
 	return values
 		
 
-def testFunction(f, k, V, S):
-	""" (int x list[int] x int x bool -> _) x int x list[int] x int -> float
-	returns the execution time of the function
-	<f> for the given arguments 
-	"""
-	t0 = timeit.default_timer()
-	f(k, V, S, False)
-	tf = timeit.default_timer()
-	return tf - t0
-			
 if __name__ == '__main__':
 	d_values = [2, 3, 4]
 	fct = [RechercheExhaustive, AlgoProgDyn, AlgoGlouton]
@@ -71,16 +58,16 @@ if __name__ == '__main__':
 		contd = [inf]*3
 		fn = [None]*3
 		for k in k_values:
-			V = generateV(d, k)
+			V = generateExpoSystem(d, k)
 			for i in range(len(fct)):
 				if fn[i] is None:
-					fn[i] = generateSavePath(fstr[i], d)
-					# writeLine() # header
+					fn[i] = generateBenchmarkSavePath(fstr[i], d)
+					# writeLine(fn[i], 'k\ttime for various S values\n', mode='w')
 				line = f'{k}'
 				for S in S_values:
 					if S >= contd[i]:
 						break
-					time = testFunction(fct[i], k, V, S)
+					time, _ = timeFunction(fct[i], k, V, S)
 					line += f'\t{time:.6e}'
 					if time >= 60:
 						contd[i] = S

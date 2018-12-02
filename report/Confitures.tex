@@ -414,7 +414,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
  
  {\bfseries N.B.} Dans le cadre du projet, on a s\'electionn\'e le parcours s\'equentiel des lignes.
  
- \item On d\'eduit des deux questions pr\'ec\'edentes un algorithme \texttt{AlgoProgDyn} qui pour un syst\`eme de $k$ capacit\'es $V[1],V[2],\dotsc,V[k]$ et une quantit\'e $S$ de confiture retourne $m(S)$. En voici le pseudocode :
+ \item On d\'eduit des deux questions pr\'ec\'edentes un algorithme \texttt{AlgoProgDyn} qui pour un syst\`eme de $k$ capacit\'es $V[1],V[2],\dotsc,V[k]$ et une quantit\'e $S$ de confiture retourne $m(S)$. En voici le pseudo-code :
  
 \begin{algorithm}
 \caption{AlgoProgDyn}
@@ -446,7 +446,7 @@ Soit $M$ un tableau doublement indic\'e tel que la case $M[s,i]$, o\`u $s \in \{
 \end{algorithmic}
 \end{algorithm}
 
- \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case du tableau $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chacune des $(S+1)\cdot (k+1)$ it\'erations de la boucle interne on acc\`ede au plus 5 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les quatre restantes pour les lectures des cases dont on cherche le minimum des valeurs. Par ailleurs, la cr\'eation et l'initialisation de la matrice $M$ se font en $\Theta(S\cdot k)$.
+ \item Pour l'analyse de la complexit\'e temporelle on utilise l'acc\`es \`a une case de la matrice $M$ comme instruction \'el\'ementaire. Ainsi, on remarque que pour chacune des $(S+1)\cdot (k+1)$ it\'erations de la boucle interne on acc\`ede au plus 5 fois \`a des \'el\'ements du tableau : l'une pour l'\'ecriture de la case et les quatre restantes pour les lectures des cases dont on cherche le minimum des valeurs. Par ailleurs, la cr\'eation et l'initialisation de la matrice $M$ se font en $\Theta(S\cdot k)$.
 Donc, la complexit\'e temporelle de l'algorithme est en $\Theta(S\cdot k)$.
 
 Quant \`a la complexit\'e spatiale, on se sert de deux structures de donn\'ees gourmandes, \`a savoir le tableau $V$ de $k$ cases d'entiers et la matrice $M$ de $(S+1)\cdot (k+1)$ cases d'entiers. En prenant comme taille de base celle d'un entier, on r\'ealise que la complexit\'e spatiale de l'algorithme est aussi en $\Theta(S\cdot k)$.
@@ -460,7 +460,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
  
  Pour ce faire, on effectue quelques modifications \`a l'algorithme \texttt{AlgoProgDyn}. Tout d'abord, la matrice $M$ devient une matrice de tableaux d'entiers d'ordre $(S+1) \times (k+1)$. De plus, la fonction \textproc{GetMsi} est modifi\'ee de sorte \`a utiliser le tableau de bocaux utilis\'es pour chaque case de la matrice lorsque n\'ecessaire. Finalement, on remplace l'appel \`a  \textproc{GetMsi} par un appel \`a \textproc{GetA} \`a la ligne 5 de l'algorithme initial. Cette nouvelle fonction reprend la logique de la fonction \textproc{GetMsi} initiale, sauf que l'on renvoie le tableau $A$ correspondant au lieu du nombre total de bocaux utilis\'es. 
  
- Voici le pseudocode des modifications effectu\'ees :
+ Voici le pseudo-code des modifications effectu\'ees :
  
 \clearpage
 \begin{algorithm}
@@ -499,7 +499,7 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
 
 En termes de m\'emoire, chaque case $M[s][i]$, o\`u $i > 0$ contient maintenant un tableau \`a $i$ cases d'entier. Ainsi, on a $\frac{k\cdot (k+1)}{2}$ cases d'entier dans chaque ligne, i.e.\ il y a $(S+1)\cdot \frac{k\cdot (k+1)}{2}$ cases d'entier dans toute la matrice $M$. De ce fait, la complexit\'e spatiale de cet algorithme est en $\Theta(S\cdot k^2)$.
  
- \item Dans un deuxi\`eme temps, on souhaite \'eviter de copier dans chaque case du tableau $M$, les tableaux $A$ des bocaux utilis\'es. Pour ce faire, on conserve l'algorithme initial et on reconstitue {\itshape a posteriori} le tableau $A$ de la solution optimale. Voici le pseudocode du deuxi\`eme algorithme :
+ \item Dans un deuxi\`eme temps, on souhaite \'eviter de copier dans chaque case du tableau $M$, les tableaux $A$ des bocaux utilis\'es. Pour ce faire, on conserve l'algorithme initial et on reconstitue {\itshape a posteriori} le tableau $A$ de la solution optimale. Voici le pseudo-code du deuxi\`eme algorithme :
  
  \clearpage
  \begin{algorithm}
@@ -537,7 +537,9 @@ En termes de m\'emoire, chaque case $M[s][i]$, o\`u $i > 0$ contient maintenant 
 
 \subsection*{Question 6}
  On constate que, pour l'algorithme global, ce sont les complexit\'es de l'algorithme initial qui l'emportent, d'o\`u celles du premier algorithme sont retenues, \`a savoir des complexit\'es en $\Theta(S\cdot k)$.
- De ce fait, on peut dire que cet algorithme est polynomial.
+ 
+ Cependant, il est important de remarquer que cette complexit\'e d\'epend de la valeur de $S$ et non pas de sa taille de codage, en l'occurrence $\lfloor \log_2(S)\rfloor + 1$.
+ De ce fait, on dit que cet algorithme est pseudo-polynomial : il est exponentiel en la longueur de ses param\`etres, mais polynomial en leur valeur num\'erique.
 
 \newpage
 \section{Algorithme III : Cas particulier et algorithme glouton}
@@ -566,7 +568,34 @@ Voici le pseudo-code de l'algorithme \texttt{AlgoGlouton} :
 \end{algorithmic}
 \end{algorithm}
 
-L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement quatre instructions \'el\'ementaires. De plus, on effectue au plus $k$ tours de boucle car, le cas \'ech\'eant, pour la $k$-i\`eme it\'eration, on utilise des bocaux de capacit\'e 1 \si{dg} et on peut ainsi verser toute la confiture restante dans des bocaux de cette capacit\'e. De ces faits, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans le pire des cas est en $\BigO(k)$.
+L'algorithme \texttt{AlgoGlouton} consiste en un boucle comportant deux divisions euclidiennes, une addition et une soustraction. 
+Pour le calcul de la complexit\'e temporelle, consid\'erons seulement las divisions euclidiennes.
+La complexit\'e de la $j$-i\`eme it\'eration est donn\'ee par
+
+\begin{equation*}
+T(j) = 
+\begin{cases}
+(\lfloor \log_2(\max(S, V[k])) \rfloor + 1)^2 & \text{si } j = 1 \\
+(\lfloor \log_2(V[k-j+1]) \rfloor + 1)^2 & \text{sinon}
+\end{cases}
+\end{equation*}
+
+Dans le pire des cas, on effectue $k$ it\'erations, d'o\`u la complexit\'e temporelle est donn\'ee par
+\begin{alignat*}{1}
+ \sum_{j=1}^{k} T[j] &= (\lfloor \log_2(\max(S, V[k])) \rfloor + 1)^2 + \sum_{j=2}^{k} (\lfloor \log_2(V[k-j+1]) \rfloor + 1)^2 \\
+                    &= (\lfloor \log_2(\max(S, V[k])) \rfloor + 1)^2 + \sum_{l=1}^{k-1} (\lfloor \log_2(V[l]) \rfloor + 1)^2 \\
+                    &\leq \left[\lfloor \log_2(\max(S, V[k])) \rfloor + 1 + \sum_{l=1}^{k-1} (\lfloor \log_2(V[l]) \rfloor + 1)\right]^2 \\
+                    &\leq \left[\log_2(S) + \sum_{l=1}^{k} (\log_2(V[l]) + 1)\right]^2
+\end{alignat*}
+
+\'Etant donn\'e que les bocaux sont de capacit\'e finie, on peut bien assumer qu'il existe une constante positive $A$ qui est une borne sup\'erieure de toutes les tailles de codage des capacit\'es du syst\`eme $V$.
+
+Il en r\'esulte que
+\begin{alignat*}{1}
+ \sum_{j=1}^{k} T[j] &\leq \left[\log_2(S) + A\cdot k\right]^2
+\end{alignat*}
+
+De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans le pire des cas est en $\BigO((\log(S) + k)^2)$. On remarque que cet algorithme est bien polynomial en la longueur de ses entr\'ees.
 
 \subsection*{Question 8}
  On dit qu'un syst\`eme de capacit\'es est {\bfseries glouton-compatible} si, pour ce syst\`eme de capacit\'es, l'algorithme \texttt{AlgoGlouton} produit la solution optimale quelle que soit soit la quantit\'e totale $S$.
@@ -589,7 +618,7 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
  \subsubsection*{Preuve}
  D'apr\'es la question pr\'ec\'edente, on a $o_l \geq g_l$ pour tout $l$ dans $\{j+1,\dotsc, k\}$. De plus, puisque au cours de l'algorithme glouton on choisit le nombre maximum possible de bocaux de capacit\'e $V[l]$, on a $o_l \leq g_l$. On en d\'eduit que $o_l = g_l$.
  
- Donc, on a :
+ Donc, on a
  \begin{alignat}{1}
     \displaystyle\sum_{i=1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i \label{eq:somme_9b1} \\
     \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i \label{eq:somme_9b2}
@@ -674,21 +703,42 @@ L'algorithme \texttt{AlgoGlouton} consiste en une boucle contenant seulement qua
  De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
  
  \subsection*{Question 11}
- Montrons que la complexit\'e de l'algorithme \texttt{TestGloutonCompatible}$(k, V)$ est en $\BigO(k)$, i.e.\ qu'il est polynomial.
+ Montrons que la complexit\'e de l'algorithme \texttt{TestGloutonCompatible}$(k, V)$ est en $\BigO(k^3)$, i.e.\ qu'il est polynomial.
 
  \subsubsection*{Preuve}
- Il y a $nbiter_ext = V[k-1]+V[k]-1 -(V[3]+2) +1 $ it\'erations de la boucle externe.
- Or $V[3]+2 \geq 5$ et $V[k-1]+V[k]-1 \leq 2\cdot V[k] - 2$. Donc, $nbiter_ext \leq 2\cdot V[k] - 6$, i.e. le nombre d'it\'erations de la boucle externe est en $\Theta(V[k])$.
+ Le nombre d'it\'erations de la boucle externe est  
+ \begin{equation*}
+    \text{nbiter\_ext} = V[k-1]+V[k]-1 -(V[3]+2) +1.
+ \end{equation*}
  
- Par ailleurs, on effectue le m\^eme nombre d'it\'erations de la boucle interne pour chaque tour de la boucle externe, \`a savoir $k$. De plus, chaque tour de la boucle interne comporte un premier test de v\'erit\'e entre deux nombres obtenus en $\Theta(1)$ \`a savoir $V[j]$ et $S$, et un deuxi\`eme test sur deux nombres obtenus chacun au moyen d'un appel \`a \texttt{AlgoGlouton}. D'apr\`es la question 7, sa complexit\`e est en $\BigO(k)$. Donc, chaque tour de la boucle interne est fait en $\BigO(k)$.
+ Or 
+ \begin{align*}
+ V[3]+2 &\geq 5 \\
+ V[k-1]+V[k]-1 &\leq 2\cdot V[k] - 2 
+\end{align*}
  
- De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(V[k]\cdot k^2)$. On en d\'eduit que l'algorithme est polynomial.
- \todo{montrer}
+ De ces faits, 
+ \begin{equation*}
+    \text{nbiter\_ext} \leq 2\cdot V[k] - 6,
+ \end{equation*}
+ i.e.\ le nombre d'it\'erations de la boucle externe est en $\Theta(V[k])$.
+ 
+ Par ailleurs, on effectue le m\^eme nombre d'it\'erations de la boucle interne pour chaque tour de la boucle externe, en l'occurrence $k$. De plus, chaque tour de la boucle interne comporte un premier test de v\'erit\'e entre deux nombres obtenus en $\Theta(1)$, en l'occurrence $V[j]$ et $S$, et un deuxi\`eme test sur deux nombres obtenus chacun au moyen d'un appel \`a \texttt{AlgoGlouton}. 
+ D'apr\`es la question 7, sa complexit\`e est en $\BigO((\log(S) + k)^2)$. 
+ Or 
+ \begin{equation*}
+  S \leq 2\cdot V[k] - 2,
+ \end{equation*}
+ i.e.\ $\log(S)$ est de l'ordre de $A$, \`a savoir la borne sup\'erieure des tailles des capacit\'es de bocaux.
+ Donc, chaque tour de la boucle interne est fait en $\BigO(k^2)$.
+ 
+ De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(k^3)$, car $V[k]$ est born\'e par $2^A$.
  
 \newpage
 \part{Mise en \oe uvre}
+On a impl\'ement\'e les trois algorithmes en le langage de programmation Python. Dans les sections suivantes, on v\'erifie exp\'erimentalement les complexit\'es temporelles th\'eoriques d\'etermin\'ees dans les sections pr\'ec\'edentes et on essaie aussi de r\'epondre \`a la question sur la mise en \oe uvre en pratique de l'algorithme glouton.
 
-\section{Impl\'ementation}
+\section{Analyse de complexit\'e exp\'erimentale}
 Le but de ce second exercice est de mesurer de mani\`ere exp\'erimentale la complexit\'e de la fonction \texttt{tailleMaxRec} et de l'algorithme d\'ecrit dans la question 5 de l'exercice pr\'ec\'edent. Le choix du langage de programmation est libre. La complexit\'e exp\'erimentale de l'ex\'ecution d'une fonction correspond ici au temps qu'il faut pour que la fonction s'ex\'ecute.
 
 Dans cet exercice, {\itshape n} d\'esigne la taille de la s\'equence initiale.

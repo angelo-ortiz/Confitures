@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from tools import readFile, validateData
+from tools import readFile, validateData, printSolution
 from exhaustive_search import RechercheExhaustive
 from dynamic_programming import AlgoProgDyn
 from greedy_algorithm import AlgoGlouton
@@ -12,8 +12,8 @@ validateData(S, k, V)
 print(f'S={S}')
 print(f'k={k}')
 print(f'V={V}')
-AlgoProgDyn(k, V, S)
-AlgoGlouton(k, V, S)
+printSolution('dynamic programming', AlgoProgDyn(k, V, S), V)
+printSolution('greedy', AlgoGlouton(k, V, S), V)
 if re == 'y' or re == 'yes':
-	RechercheExhaustive(k, V, S)
+	printSolution('exhaustive search', RechercheExhaustive(k, V, S), V)
 
