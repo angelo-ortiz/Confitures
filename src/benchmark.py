@@ -8,7 +8,7 @@ import random
 
 def generateBenchmarkSavePath(fct, d_value, dn='data'):
 	""" str x int -> str
-    returns a string corresponding to the absolute
+	returns a string corresponding to the absolute
 	path of the function <fct>'s data file for the
 	the generator <d_value> of the system of
 	capacities

@@ -3,18 +3,18 @@ import timeit
 
 def generateSavePath(fn, dn='data'):
 	""" str x str -> str
-    returns a string corresponding to the absolute
+	returns a string corresponding to the absolute
 	path of the data file <fn>
 	"""
 	from os.path import dirname, realpath, join
 	return join(dirname(dirname(realpath(__file__))), dn, fn)
                      
 def readFile(fn):
-    """ str -> int x int x list[int]
-    reads the data file <fn> and returns the
-    confiture quantity, the length of the system
-    of capacities and the system itself
-    """
+	""" str -> int x int x list[int]
+	reads the data file <fn> and returns the
+	confiture quantity, the length of the system
+	of capacities and the system itself
+	"""
     with open(fn, "r") as f:
         args = f.readline().split()
         S, k = tuple(map(int, args))
@@ -23,12 +23,12 @@ def readFile(fn):
         return S, k, V
 
 def writeLine(fn, line, mode='a'):
-    """ str x list[str] ->
-    writes the string <line> into the data
-    file <fn> on mode:
-    - 'a' = append
-    - 'w' = overwrite
-    """
+	""" str x list[str] ->
+	writes the string <line> into the data
+	file <fn> on mode:
+	- 'a' = append
+	- 'w' = overwrite
+	"""
     with open(fn, mode) as f:
         f.write(line)
 
