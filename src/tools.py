@@ -15,12 +15,12 @@ def readFile(fn):
 	confiture quantity, the length of the system
 	of capacities and the system itself
 	"""
-    with open(fn, "r") as f:
-        args = f.readline().split()
-        S, k = tuple(map(int, args))
-        caps = f.readline().split()
-        V = list(map(int, caps))
-        return S, k, V
+	with open(fn, "r") as f:
+		args = f.readline().split()
+		S, k = tuple(map(int, args))
+		caps = f.readline().split()
+		V = list(map(int, caps))
+		return S, k, V
 
 def writeLine(fn, line, mode='a'):
 	""" str x list[str] ->
@@ -29,11 +29,11 @@ def writeLine(fn, line, mode='a'):
 	- 'a' = append
 	- 'w' = overwrite
 	"""
-    with open(fn, mode) as f:
-        f.write(line)
+	with open(fn, mode) as f:
+		f.write(line)
 
 def validateData(S, k, V):
-	""" int x int x list[int]
+	""" int x int x list[int] ->
 	checks that the length system of capacities
 	<V> matches <k> and that the capacities are
 	ordered in an ascending way, otherwise it
@@ -72,5 +72,5 @@ def timeFunction(f, k, V, S):
 	# n: int
 	n,_ = f(k, V, S, display=False)
 	tf = timeit.default_timer()
-	return (tf - t0, n)
+	return (tf - t0), n
 			

@@ -124,7 +124,7 @@ Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de 
 \section{Algorithme I : Recherche exhaustive}
 
 \subsection*{Question 1}
-Soit la propri\'et\'e suivante \( P_{1}(s) : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1..k]$.
+Soit la propri\'et\'e suivante \( P_{1}(s), s \in \mathbb{Z} : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1..k]$.
 Montrons-la par r\'ecurrence forte sur $s$.
 
 \subsubsection*{Preuve}
@@ -156,15 +156,16 @@ On en d\'eduit que \texttt{RechercheExhaustive}$(k, V, s_0)$ se termine.
 \underline{Conclusion} : 
 \begin{equation*}
 \left .\begin{array}{l}
+\forall s < 0, P_{1}(s) \text{ vraie } \\
 P_{1}(0) \text{ vraie } \\
 \forall s_0 > 0, [(\forall s < s_0, P_{1}(s)) \Rightarrow P_{1}(s_0) ]
 \end{array} \right \}
 \left .\begin{array}{l}
-\forall s \in \mathbb{N}, \texttt{RechercheExhaustive}(k,V,s) \\
+\forall s \in \mathbb{Z}, \texttt{RechercheExhaustive}(k,V,s) \\
 \text{se termine et est valide.}
 \end{array}\right .
 \end{equation*}
-
+ 
 \subsubsection*{Cas particulier}
 D'apr\`es le r\'esultat pr\'ec\'edant, pour $s = S \in \mathbb{N}$ (la quantit\'e de confiture dans le cadre de ce projet), on a que l'algorithme est valide et se termine lorsqu'il est appel\'e par l'appel initial \texttt{RechercheExhaustive}$(k,V,S)$. 
 
@@ -604,14 +605,18 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \subsubsection*{Preuve}
  Il suffit de donner un exemple de syst\`eme de capacit\'es $V$ tel qu'il y a au moins une quantit\'e totale $S$ pour laquelle l'algorithme \texttt{AlgoGlouton} ne renvoie pas la solution optimale.
  
- Soit le syst\`eme de capacit\'es $V = [1, 4, 5]$. Soit $S = 28$ la quantit\'e totale de confiture. L'algorithme \texttt{AlgoGlouton} produit la solution $(8, [3, 0, 5])$, alors que la solution optimale est $(6, [0, 2, 4])$, puisque 5 bocaux ne suffisent pas. Ceci est donc un contre-exemple cherch\'e.
+ Soit le syst\`eme de capacit\'es $V = [1, 4, 5]$. Soit $S = 28$ la quantit\'e totale de confiture. L'algorithme \texttt{AlgoGlouton} produit la solution $(8, [3, 0, 5])$, alors que la solution optimale est $(6, [0, 2, 4])$, puisque 5 bocaux ne suffisent pas. Ceci est donc un contre-exemple cherch\'e. \hfill\ensuremath{\square}
 
 \subsection*{Question 9}
+ Montrons que, pour tout entier $d \geq 2$, le syst\`eme de capacit\'es {\bfseries Expo} est glouton-compatible.
+ 
+ Soit $g$ la solution produite par l'algorithme \texttt{AlgoGlouton} pour le syst\`eme {\bfseries Expo}. Supposons qu'il existe une solution optimale $o$ diff\'erente de $g$.
+
 \begin{enumerate}[a)]
  \item Montrons qu'il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ tel que $o_j < g_j$.
  
  \subsubsection*{Preuve}
- D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j \in \{1,\dotsc,k\}$ tel que $o_j < g_j$, car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j \in \{1,\dotsc,k\}$ remplissant ladite condition.
+ D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j \in \{1,\dotsc,k\}$ tel que $o_j < g_j$, car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j \in \{1,\dotsc,k\}$ remplissant ladite condition. \hfill\ensuremath{\square}
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
  
@@ -624,7 +629,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
     \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i \label{eq:somme_9b2}
  \end{alignat}
  
- En soustrayant \eqref{eq:somme_9b2} de \eqref{eq:somme_9b1}, on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ En soustrayant \eqref{eq:somme_9b2} de \eqref{eq:somme_9b1}, on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\). \hfill\ensuremath{\square}
  
  \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\).
  
@@ -644,7 +649,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
     V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i. 
  \end{equation*}
  Or $g_j - o_j \geq 1$ d'apr\`es la question a) et le fait que ce sont des entiers naturels.
- Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\).
+ Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). \hfill\ensuremath{\square}
  
  Cette propri\'et\'e pr\'ecise l'une des mani\`eres d'utiliser le moins possible de bocaux pour remplir une quantit\'e de confiture donn\'ee. En effet, elle consiste \`a remplir au complet tous les bocaux des plus grandes capacit\'es possibles jusqu'\`a l'arriv\'ee \`a une certaine capacit\'e. Pour cette derni\`ere, on pr\'ef\`ere ne pas remplir tous les bocaux possibles, mais de se servir plut\^ot de ceux de capacit\'e plus petite. 
  
@@ -656,7 +661,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  		 &\leq (d-1)\cdot \frac{d^{j-1}-1}{d-1} \\
  	d^{j-1}	 &\leq d^{j-1}-1 & \text{car } d-1 \geq 1
  \end{alignat*}
- On arrive donc \`a une contradiction, i.e.\ il existe un indice \(l \in \{1,\dotsc,j-1\}\) tel que $o_l \geq d$.
+ On arrive donc \`a une contradiction, i.e.\ il existe un indice \(l \in \{1,\dotsc,j-1\}\) tel que $o_l \geq d$. \hfill\ensuremath{\square}
  
  \item Posons la suite $o'$ telle que $o_{l}' = o_l-d, o_{l+1}' = o_{l+1}+1$ et $o_i' = o_i$ pour tout $i \neq l$ et $i \neq l+1$. Montrons que $o'$ est une solution du probl\`eme.
  
@@ -686,10 +691,12 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
   \begin{equation*}
    \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i = \displaystyle\sum_{i=1}^{k} V[i]\cdot o_i',
   \end{equation*}
-  i.e.\ $o'$ est aussi une solution optimale du probl\`eme. 
+  i.e.\ $o'$ est aussi une solution du probl\`eme. \hfill\ensuremath{\square}
   
   \medskip
-  On remarque que la diff\'erence entre $o'$ et $o$ est que la premi\`ere remplace $d$ bocaux d'une certaine capacit\'e dans la deuxi\`eme solution par un bocal de la capacit\'e imm\'ediatement sup\'erieure. En r\'ep\'etant ce proc\'ed\'e un nombre fini de fois, on remplace des bocaux de petite capacit\'e par ceux de plus grande capacit\'e de sorte \`a utiliser, pour chaque plus grande capacit\'e s\'electionnable, le plus possible de bocaux. Cette m\'ethode correspondant \`a la solution $g$, on a que la solution gloutonne est optimale. On en d\'eduit que le syst\`eme {\bfseries Expo} est glouton-compatible.
+  On remarque que la diff\'erence entre $o'$ et $o$ est que la premi\`ere remplace $d$ bocaux d'une certaine capacit\'e dans la deuxi\`eme solution par un bocal de la capacit\'e imm\'ediatement sup\'erieure. Autrement dit, la solution $o'$ utilise $d-1$ bocaux de moins que la solution $o$.
+  
+  De ce fait, la solution $o$ n'est pas optimale, ce qui contredit l'hypoth\`ese de d\'epart. On en d\'eduit que, pour le syst\`eme {\bfseries Expo}, toute solution $o$ est non optimale ou elle est \'egale \`a $g$. Ceci \'equivaut \`a dire que, pour le syst\`eme {\bfseries Expo}, pour toute solution $o$, si elle est optimale alors est \'egale \`a $g$. On en d\'eduit que toute solution optimale est \'egale \`a $g$. Or il existe une solution optimale \`a ce probl\`eme. Donc, l'algorithme \texttt{AlgoGlouton} renvoie l'unique solution optimale, \`a savoir $g$, pour le syst\`eme de capacit\'es {\bfseries Expo}. \hfill\ensuremath{\square}
 \end{enumerate}
 
 \subsection*{Question 10}
@@ -700,7 +707,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
 
  Soit $V = [1, p]$, o\`u $p > 1$, un syst\`eme de capacit\'es quelconque. On remarque que ce syst\`eme est un syst\`eme {\bfseries Expo} avec $k = 2$ et $d = p \geq 2$.
 
- De ces faits, tout syst\`eme de capacit\'e $V$ avec $k = 2$ est bien glouton-compatible.
+ De ces faits, tout syst\`eme de capacit\'e $V$ de longueur $k = 2$ est bien glouton-compatible. \hfill\ensuremath{\square}
  
  \subsection*{Question 11}
  Montrons que la complexit\'e de l'algorithme \texttt{TestGloutonCompatible}$(k, V)$ est en $\BigO(k^3)$, i.e.\ qu'il est polynomial.
@@ -732,7 +739,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  i.e.\ $\log(S)$ est de l'ordre de $A$, \`a savoir la borne sup\'erieure des tailles des capacit\'es de bocaux.
  Donc, chaque tour de la boucle interne est fait en $\BigO(k^2)$.
  
- De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(k^3)$, car $V[k]$ est born\'e par $2^A$.
+ De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(k^3)$, car $V[k]$ est born\'e par $2^A$. \hfill\ensuremath{\square}
  
 \newpage
 \part{Mise en \oe uvre}
@@ -788,6 +795,12 @@ On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \
 	
 	On en d\'eduit la droite de r\'egression de $\dfrac{CIter(n)}{n^3}$ en fonction de $n$ : $\\\Delta : y = \num{8.842541E-12}x - \num{6.164326E-08}$. On remarque l'ordre de grandeur de la pente de la droite : $\num{8.842541E-12} \ll 1$. Ceci implique que la fonction est bien constante de valeur $\num{6.9601546E-08}$. 
 	%On remarque que la fonction $\dfrac{CIter(n)}{n^3}$ est constante compte tenu que les points forment la droite $\Delta : y = \num{7.3965667e-08}$ avec un \'ecart type ${\sigma = \num{5.8075249e-09}}$.
+\newpage
+
+\part*{Conclusion}
+\addcontentsline{toc}{part}{Conclusion}
+
+\todo{\`a faire}
 
 \newpage
 \begin{appendices}
