@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import timeit
+import time
 
 def generateSavePath(fn, dn='data'):
 	""" str x str -> str
@@ -16,9 +16,12 @@ def readFile(fn):
 	of capacities and the system itself
 	"""
 	with open(fn, "r") as f:
-		args = f.readline().split()
-		S, k = tuple(map(int, args))
+		# S, k: int
+		S = int(f.readline())
+		k = int(f.readline())
+		# caps: list[str]
 		caps = f.readline().split()
+		# V: list[int]
 		V = list(map(int, caps))
 		return S, k, V
 
@@ -39,10 +42,14 @@ def validateData(S, k, V):
 	ordered in an ascending way, otherwise it
 	terminates the programme
 	"""
+	if S < 0:
+		print(f'Error: the confiture quantity must be positive')
+		exit(1)
 	if len(V) != k:
 		print(f'Error: the number of capacities ({len(V)}) does not match k = {k}')
 		exit(1)
 	V.sort()
+	# i: int
 	for i in range(1, k):
 		if V[i-1] == V[i]:
 			print('Error: there are at least two equal capacities')
@@ -57,6 +64,7 @@ def printSolution(name, res, V=None, verbose=True):
 	print(f'The {name} algorithm found an optimum solution using {res[0]} jars')
 	if verbose and (res[1] is not None):
 		print('capacity\tquantity')
+		# i: int
 		for i in range(len(V)):
 			print(f'{V[i]}\t\t{res[1][i]}')
 
@@ -68,9 +76,8 @@ def timeFunction(f, k, V, S):
 	of jars of the its solution
 	"""
 	# t0, tf: float
-	t0 = timeit.default_timer()
+	t0 = time.process_time()
 	# n: int
 	n,_ = f(k, V, S, display=False)
-	tf = timeit.default_timer()
+	tf = time.process_time()
 	return (tf - t0), n
-			

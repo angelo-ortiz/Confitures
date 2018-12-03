@@ -17,7 +17,7 @@ def RechercheExhaustiveRec(k, V, s):
 	a confiture quantity of <s> and for a system of
 	capacities <V>
 	"""
-	#in NbCont, x: int
+	# NbCont, x: int
 	if s < 0:
 		return inf
 	elif s == 0:

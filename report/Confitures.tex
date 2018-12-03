@@ -20,22 +20,31 @@
 \usepackage[utf8]{inputenc} % as usual
 \usepackage[french]{babel}
 \usepackage{makeidx}
-\usepackage{csquotes}
-\usepackage{amsmath}
-\usepackage{listingsutf8}
-\usepackage{xcolor}
-\usepackage{xspace}
-\usepackage{hyperref}
-\usepackage{amssymb}
+\usepackage[titletoc]{appendix}
 \usepackage[shortlabels]{enumitem} 
 \usepackage{siunitx}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{listingsutf8}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage[T1]{fontenc}
-\usepackage[titletoc]{appendix}
+\usepackage{caption}
+\usepackage[pdftex]{graphicx} % required to import graphic files
+\usepackage{tikz}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+\usetikzlibrary{plotmarks}
 
 % ********* Graphics definition *******
-\usepackage[pdftex]{graphicx} % required to import graphic files
 \usepackage{eso-pic} % these two are required to add the little picture on top of every page
 \usepackage{everyshi} % these two are required to add the little picture on top of every page
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
@@ -741,60 +750,45 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  
  De ces faits, la complexit\`e de l'algorithme \texttt{TestGloutonCompatible} est en $\BigO(k^3)$, car $V[k]$ est born\'e par $2^A$. \hfill\ensuremath{\square}
  
-\newpage
-\part{Mise en \oe uvre}
-On a impl\'ement\'e les trois algorithmes en le langage de programmation Python. Dans les sections suivantes, on v\'erifie exp\'erimentalement les complexit\'es temporelles th\'eoriques d\'etermin\'ees dans les sections pr\'ec\'edentes et on essaie aussi de r\'epondre \`a la question sur la mise en \oe uvre en pratique de l'algorithme glouton.
+ \newpage
+ \part{Mise en \oe uvre}
+ On a impl\'ement\'e les trois algorithmes en le langage de programmation Python. Dans les deux sections suivantes, on v\'erifie exp\'erimentalement les complexit\'es temporelles th\'eoriques d\'etermin\'ees dans les sections pr\'ec\'edentes et on essaie aussi de r\'epondre \`a la question sur la mise en \oe uvre en pratique de l'algorithme glouton.
 
-\section{Analyse de complexit\'e exp\'erimentale}
-Le but de ce second exercice est de mesurer de mani\`ere exp\'erimentale la complexit\'e de la fonction \texttt{tailleMaxRec} et de l'algorithme d\'ecrit dans la question 5 de l'exercice pr\'ec\'edent. Le choix du langage de programmation est libre. La complexit\'e exp\'erimentale de l'ex\'ecution d'une fonction correspond ici au temps qu'il faut pour que la fonction s'ex\'ecute.
+ \section{Analyse de complexit\'e exp\'erimentale}
+ Pour cette section, on a consid\'er\'e le syst\`eme de capacit\'es {\bfseries Expo} pour des valeurs $d = 2, 3$ et $4$. Pour chaque syst\`eme, on a fait varier les valeurs des param\`etres $S$ et $k$. Bien \'evidemment, leur ordre de grandeur n'est pas le m\^eme pour les trois tests, comme vous pouvez vous en apercevoir ci-dessous.
 
-Dans cet exercice, {\itshape n} d\'esigne la taille de la s\'equence initiale.
+ \subsection*{Question 12}
+ Pour comprendre les images donn\'ees juste apr\`es, il faut pr\'eciser que les temps trouv\'es correspondent au temps CPU et non pas au temps d'ex\'ecution, et que l'on s'est arr\^et\'es d\`es que le temps de calcul m\'esur\'e d\'epasse une minute.
 
-\subsection*{Question 3}
-La plus grande valeur de $n$ que l'on peut traiter sans probl\`eme de m\'emoire ou de temps d'ex\'ecution de quelques minutes pour la fonction \texttt{tailleMaxRec} est 18. 
+ \section{Utilisation de l'algorithme glouton}
+ On s'int\'eresse maintenant \`a v\'erifier la faisabilit\'e pratique de l'algorithme glouton. Deux points sont importants \`a ce sujet : la fr\'equence d'apparition des syst\`emes de capacit\'es glouton-compatibles, et ses performances dans les cas contraire \`a l'\'egard de la solution optimale.
 
-Quant \`a \texttt{tailleMaxIter}, la valeur de $n$ correspondante est 1600.
+ \subsection*{Question 13}
 
-\subsection*{Question 4}
-On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \`a la fonction \texttt{tailleMaxRec} selon les valeurs de $n$.
-	\begin{center}
-	\begin{tabular}{|c|cc|}
-	\hline $n$ & $CRec(n)$ (en s.) & $\log CRec(n)$ \\
-	\hline 11 &   0.0915572 & -1.0383075 \\ 
-	\hline 12 &   0.3087260 & -0.5104268 \\ 
-	\hline 13 &   0.9356748 & -0.0288751 \\ 
-	\hline 14 &   3.0208589 &  0.4801304 \\
-	\hline 15 &   9.7992974 &  0.9911949 \\ 
-	\hline 16 &  30.8693360 &  1.4895273 \\ 
-	\hline 17 & 100.5011405 &  2.0021710 \\
-	\hline 18 & 322.5870859 &  2.5086470 \\
-	\hline
-	\end{tabular}
-	\end{center}
-	
-	On en d\'eduit la droite de r\'egression de $\log CRec(n)$ en fonction de $n$ : $\\\Delta : y = 0.505452x - 6.592292$. On remarque que la pente de la droite est $0.505452$, ce qui \'etait attendu car la valeur est comprise entre $\log 2 = 0.301030$ et $\\\log 4 = 0.602060$. 
-	%On remarque que la fonction $\log CRec(n)$ est lin\'eaire compte tenu que les points forment une droite dont la pente est $0.5108032$ et l'\'ecart type est $\sigma = 0.0075038$.
+\begin{figure}[!h]
+  \centering
+  \captionsetup{justification=centering}
+  \begin{tikzpicture}
+	\begin{axis}[%
+	  width=14cm,
+	  grid=major,
+	  grid style={dashed,gray!30},
+	  xmin=2,
+	  xmax=30,
+	  xlabel={Longueur maximale ($k$)},
+	  ylabel={Proportion de syst\`emes glouton-compatibles},
+	  scaled x ticks = true]
+	  \addplot [color=blue,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/proportion.txt};
+	\end{axis}
+  \end{tikzpicture}
+  \caption[L'impact de la longueur du syst\`eme]{Variation de la proportion de syst\`emes glouton-compatibles en fonction de la borne sup\'erieure de l'intervalle de longueurs consid\'er\'e}
+  \label{fig:prop}
+\end{figure}
 
-\newpage
-\subsection*{Question 5}
-On a mis dans le tableau ci-dessous le temps d'ex\'ecution de plusieurs appels \`a la fonction \texttt{tailleMaxIter} selon les valeurs de $n$.
-	\begin{center}
-	\begin{tabular}{|c|cc|}
-	\hline $n$ & $CIter(n)$ (en s.) & $\dfrac{CIter(n)}{n^3}$ \\[6pt]
-	\hline 200 & 0.5192115 & $\num{6.4901434E-08}$ \\ 
-	\hline 400 & 4.1114257 & $\num{6.4241026E-08}$ \\ 
-	\hline 600 & 14.2562266 & $\num{6.6001049E-08}$ \\ 
-	\hline 800 & 34.8566699 & $\num{6.8079433E-08}$ \\
-	\hline 1000 & 71.8084174 & $\num{7.1808417E-08}$ \\ 
-	\hline 1200 & 124.3441816 & $\num{7.1958438E-08}$ \\ 
-	\hline 1400 & 200.7089246 & $\num{7.3144652E-08}$ \\
-	\hline 1600 & 314.0727653 & $\num{7.6677921E-08}$ \\
-	\hline
-	\end{tabular}
-	\end{center}
-	
-	On en d\'eduit la droite de r\'egression de $\dfrac{CIter(n)}{n^3}$ en fonction de $n$ : $\\\Delta : y = \num{8.842541E-12}x - \num{6.164326E-08}$. On remarque l'ordre de grandeur de la pente de la droite : $\num{8.842541E-12} \ll 1$. Ceci implique que la fonction est bien constante de valeur $\num{6.9601546E-08}$. 
-	%On remarque que la fonction $\dfrac{CIter(n)}{n^3}$ est constante compte tenu que les points forment la droite $\Delta : y = \num{7.3965667e-08}$ avec un \'ecart type ${\sigma = \num{5.8075249e-09}}$.
+ \subsection*{Question 14}
+ 
+
 \newpage
 
 \part*{Conclusion}

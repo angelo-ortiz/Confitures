@@ -16,4 +16,3 @@ printSolution('dynamic programming', AlgoProgDyn(k, V, S), V)
 printSolution('greedy', AlgoGlouton(k, V, S), V)
 if re == 'y' or re == 'yes':
 	printSolution('exhaustive search', RechercheExhaustive(k, V, S), V)
-

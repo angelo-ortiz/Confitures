@@ -21,6 +21,7 @@ def ConfitureForwards(k, V, S):
 	"""
 	# M: list[list[int]]
 	M = initMatrix(S+1, k+1)
+	# s, i: int
 	for s in range(S+1):
 		for i in range(k+1):
 			M[s][i] = getMsi(V, M, s, i)
@@ -31,7 +32,9 @@ def initMatrix(rows, columns):
 	returns a <rows>x<columns> matrix initialised
 	to +infinity for each and every cell of its
 	"""
+	# M: list[list[int]]
 	M = []
+	# r: int
 	for r in range(rows):
 		M.append([inf]*columns)
 	return M

@@ -27,12 +27,10 @@ def TestGloutonCompatible(k, V):
 	<V> is greedy-compatible or not
 	"""
 	if k >= 3:
-		# S: int
+		# S, j, n, m: int
 		for S in range(V[2]+2, V[k-2]+V[k-1]):
-			# j: int
 			for j in range(k):
 				if V[j] < S:
-					# n, m: int
 					n,_ = AlgoGlouton(k, V, S, display=False)
 					m,_ = AlgoGlouton(k, V, S-V[j], display=False)
 					if n > m+1:

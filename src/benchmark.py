@@ -22,40 +22,38 @@ def generateExpoSystem(d, k):
 	"""
 	# V: list[int]
 	V = [1]
-	# val: int
+	# val, i: int
 	val = 1
 	for i in range(k-1):
 		val *= d
 		V.append(val)
 	return V
 
-def generateSvalues():
-	""" -> list[int]
+def generateSvalues(b=10, p=15):
+	""" int x int -> list[int]
 	returns a list of all the S quantities that
 	are going to be tested afterwards
 	"""
-	# base, values: list[int]
-	base = [10, 100, 1000, 10000, 100000, 1000000, 10000000]
+	# values: list[int]
 	values = []
-	# b, tmp: int
-	tmp = base[0]
-	for b in base[:-1]:
-		while tmp < 10*b:
-			values.append(tmp)
-			tmp += b
-	values.append(base[-1])
+	# i, i_max: int
+	i = b
+	i_max = pow(b, p) 
+	while i < i_max:
+		values.extend(range(i, i*b, i))
+		i *=b
+	values.append(i_max)
 	return values
-		
 
-if __name__ == '__main__':
-	d_values = [2, 3, 4]
-	fct = [RechercheExhaustive, AlgoProgDyn, AlgoGlouton]
-	fstr = ['es', 'dp', 'ga']
-	S_values = generateSvalues()
-	k_values = [2, 4, 6, 8, 10]
+def algorithmsBenchmark(fct, fstr, d_values, S_values, k_values):
+	"""
+	"""
 	print('Starting benchmark ...')
+	# d, k, i, S: int
 	for d in d_values:
+		# contd, V: list[int]
 		contd = [inf]*3
+		# fn: list[str]
 		fn = [None]*3
 		for k in k_values:
 			V = generateExpoSystem(d, k)
@@ -63,17 +61,28 @@ if __name__ == '__main__':
 				if fn[i] is None:
 					fn[i] = generateBenchmarkSavePath(fstr[i], d)
 					# writeLine(fn[i], 'k\ttime for various S values\n', mode='w')
+				# line: str	
 				line = f'{k}'
 				for S in S_values:
 					if S >= contd[i]:
 						break
+					# time: float
 					time, _ = timeFunction(fct[i], k, V, S)
 					line += f'\t{time:.6e}'
-					if time >= 60:
+					if time >= 60.:
 						contd[i] = S
 				writeLine(fn[i], line + '\n')
 			print(contd)
 		print(f'The tests for d={d} finished correctly')
 	print('Benchmark done!')
-			
 
+if __name__ == '__main__':
+	# fct: list[fun]
+	fct = [RechercheExhaustive, AlgoProgDyn, AlgoGlouton]
+	# fstr: list[str]
+	fstr = ['es', 'dp', 'ga']
+	# d_values, S_values, k_values: list[int]
+	d_values = [2, 3, 4]
+	S_values = generateSvalues(b=10, p=4)
+	k_values = range(0, 31, 2)
+	algorithmsBenchmark(fct, fstr, d_values, S_values, k_values)

@@ -37,10 +37,11 @@ def gloutonCompatibleSystemsData(fn_pr, fn_st, k_min, k_max, p_max, no_sys, f=10
 	and greedy algorithms for this system
 	and a confiture quantity varying from
 	<p_max> to <f*p_max> in the file <fn_st>
-	plus, it returns the proportion for the
+	
+	finally, it returns the proportion for the
 	whole interval [| k_min, k_max |]
 	"""
-	# n, g, k, i: int
+	# n, g, k, i, S, dp_n, ga_n: int
 	n = 0
 	g = 0
 	# writeLine(fn, 'dp_t\t\t\tdp_n\tga_t\t\t\tga_n\n', mode='w')
@@ -52,6 +53,7 @@ def gloutonCompatibleSystemsData(fn_pr, fn_st, k_min, k_max, p_max, no_sys, f=10
 				g += 1
 			else:
 				for S in range(p_max, f*p_max+1):
+					# dp_t, ga_t: float
 					dp_t, dp_n = timeFunction(AlgoProgDyn, k, V, S)
 					ga_t, ga_n = timeFunction(AlgoGlouton, k, V, S)
 					writeLine(fn_st, f'{dp_t:.6e}\t{dp_n}\t\t{ga_t:.6e}\t{ga_n}\n')
@@ -59,7 +61,7 @@ def gloutonCompatibleSystemsData(fn_pr, fn_st, k_min, k_max, p_max, no_sys, f=10
 		writeLine(fn_pr, f"{k}\t{100*g/n:.3}\n")
 	return g / n
 
-def greedyOptimalityStatistics():
+def greedyOptimalityStatistics(fn):
 	""" -> float x int x float x float x float x float x float x float
 	returns the average and greatest gaps
 	between the dynamic programming and the 
@@ -87,9 +89,8 @@ def greedyOptimalityStatistics():
 	gd_t = 0.
 	td_tp = 0.
 	gd_tp = 0.
-	# fn_st: str
-	global fn_st	
-	with open(fn_st, 'r') as f:
+	with open(fn, 'r') as f:
+		# line: str
 		for line in f:
 			noGC += 1
 			dp_t, dp_n, ga_t, ga_n = tuple(map(float, line.split()))
@@ -126,8 +127,8 @@ def printStatistics(p, ag_n, gg_n, ag_np, gg_np, ag_t, gg_t, ag_tp, gg_tp):
 
 if __name__ == '__main__':
 	# fn_st, fn_pr: str
-	fn_st = generateSavePath('stats.txt')
-	fn_pr = generateSavePath('proportion.txt')
+	fn_st = generateSavePath('tt.txt')
+	fn_pr = generateSavePath('ttt.txt')
 	# p: float
 	p = gloutonCompatibleSystemsData(fn_pr, fn_st, 3, 30, 100, 20, f=10)
-	printStatistics(p, *greedyOptimalityStatistics());
+	printStatistics(p, *greedyOptimalityStatistics(fn_st))
