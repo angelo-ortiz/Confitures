@@ -6,7 +6,7 @@ from greedy_algorithm import AlgoGlouton
 from math import inf
 import random
 
-def generateBenchmarkSavePath(fct, d_value, dn='data'):
+def generateBenchmarkSavePath(fct, d_value):
 	""" str x int -> str
 	returns a string corresponding to the absolute
 	path of the function <fct>'s data file for the
@@ -67,6 +67,7 @@ def algorithmsBenchmark(fct, fstr, d_values, S_values, k_values):
 					if S >= contd[i]:
 						break
 					# time: float
+					print(k, V, S)
 					time, _ = timeFunction(fct[i], k, V, S)
 					line += f'\t{time:.6e}'
 					if time >= 60.:
@@ -83,6 +84,6 @@ if __name__ == '__main__':
 	fstr = ['es', 'dp', 'ga']
 	# d_values, S_values, k_values: list[int]
 	d_values = [2, 3, 4]
-	S_values = generateSvalues(b=10, p=4)
-	k_values = range(0, 31, 2)
+	S_values = generateSvalues(b=10, p=15)
+	k_values = range(2, 31, 2)
 	algorithmsBenchmark(fct, fstr, d_values, S_values, k_values)
