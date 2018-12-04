@@ -27,15 +27,17 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{listingsutf8}
 \usepackage{csquotes}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{xspace}
 \usepackage{hyperref}
+\usepackage{xparse}
 \usepackage{amssymb}
 \usepackage{amsfonts}
-\usepackage{mathtools}
+\usepackage{mathtools, stmaryrd}
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
-\usepackage{caption}
+\usepackage[justification=centering]{caption}
+\usepackage{multirow}
 \usepackage[pdftex]{graphicx} % required to import graphic files
 \usepackage{tikz}
 \usetikzlibrary{datavisualization}
@@ -49,9 +51,14 @@
 \usepackage{everyshi} % these two are required to add the little picture on top of every page
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 
+\DeclarePairedDelimiterX{\Iintv}[1]{\llbracket}{\rrbracket}{\iintvargs{#1}}
+\NewDocumentCommand{\iintvargs}{>{\SplitArgument{1}{,}}m} {\iintvargsaux#1}
+\NewDocumentCommand{\iintvargsaux}{mm} {#1\mkern1.5mu..\mkern1.5mu#2}
+\renewcommand{\arraystretch}{1.2}
 \algnewcommand\AND{\textbf{and}\xspace}
 \algnewcommand\OR{\textbf{or}\xspace}
 \newcommand{\BigO}{\mathcal{O}}
+\newcommand{\tdots}{\mathinner {\ldotp \ldotp}}
 \renewcommand{\appendixname}{Annexe}
 \hypersetup{
     colorlinks  = true,
@@ -93,6 +100,8 @@
 %\pagestyle{cb} % now we want to have headers and footers
 
 \tableofcontents
+\listoffigures
+\listoftables
 
 \newpage
 
@@ -133,7 +142,7 @@ Les objectifs de ce projet sont l'analyse th\'eorique et la mise en \oe uvre de 
 \section{Algorithme I : Recherche exhaustive}
 
 \subsection*{Question 1}
-Soit la propri\'et\'e suivante \( P_{1}(s), s \in \mathbb{Z} : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1..k]$.
+Soit la propri\'et\'e suivante \( P_{1}(s), s \in \mathbb{Z} : \) \texttt{RechercheExhaustive}$(k,V,s)$ se termine et renvoie le nombre minimal de bocaux \`a remplir pour une quantit\'e $s$ de confiture avec un syst\`eme de $k$ capacit\'es d\'ecrit dans les cases du tableau $V[1 \tdots k]$.
 Montrons-la par r\'ecurrence forte sur $s$.
 
 \subsubsection*{Preuve}
@@ -154,7 +163,7 @@ Comme la quantit\'e de confiture $s_0$ est positive, on a besoin d'{\itshape au 
 
 Par ailleurs, en ce qui concerne l'algorithme \texttt{RechercheExhaustive}, on rentre dans le bloc \texttt{else} du premier branchement conditionnel, puis dans le bloc \texttt{else} du deuxi\`eme branchement conditionnel, puisque $s_0 > 0$. On sait que la capacit\'e minimum est 1 \si{dg}. On en d\'eduit que le nombre {\itshape maximum} de bocaux \`a utiliser est $s_0$. 
 
-On cherche \`a am\'eliorer la solution de d\'epart. Pour ce faire, on teste chaque capacit\'e $V[i], i \in \{1, \dotsc, k \}$, pour le premier bocal \`a remplir. Il reste ainsi $s_0-V[i]$ d\'ecigrammes de confiture \`a verser. D'apr\`es les conditions du probl\`eme, $V[i] \geq 1$, d'o\`u $s_0-V[i] < s_0$. Par hyporh\`ese de r\'ecurrence, \texttt{RechercheExhaustive}$(k,V,s)$, o\`u $s=s_0-V[i]$, se termine et est valide. On rajoute 1 \`a cette solution en raison du premier choix. On teste ensuite si cette solution am\'eliore la solution courante et, le cas \'ech\'eant, on la met \`a jour. On r\'ep\`ete ce proc\'ed\'e pour chacune des capacit\'es du tableau $V[1..k]$. 
+On cherche \`a am\'eliorer la solution de d\'epart. Pour ce faire, on teste chaque capacit\'e $V[i], i \in \{1, \dotsc, k \}$, pour le premier bocal \`a remplir. Il reste ainsi $s_0-V[i]$ d\'ecigrammes de confiture \`a verser. D'apr\`es les conditions du probl\`eme, $V[i] \geq 1$, d'o\`u $s_0-V[i] < s_0$. Par hyporh\`ese de r\'ecurrence, \texttt{RechercheExhaustive}$(k,V,s)$, o\`u $s=s_0-V[i]$, se termine et est valide. On rajoute 1 \`a cette solution en raison du premier choix. On teste ensuite si cette solution am\'eliore la solution courante et, le cas \'ech\'eant, on la met \`a jour. On r\'ep\`ete ce proc\'ed\'e pour chacune des capacit\'es du tableau $V[1 \tdots k]$. 
 
 Comme mentionn\'e pr\'ec\'edemment, \`a la fin de l'examen des $k$ capacit\'es pour le premier bocal, on se retrouve avec la solution optimale. 
 \'Etant donn\'e que l'appel \texttt{RechercheExhaustive}$(k, V, s_0)$ renvoie cette solution optimale, il est valide. 
@@ -496,9 +505,9 @@ On d\'esire \`a pr\'esent permettre \`a l'algorithme de retourner un tableau A i
         \State $left \gets \Call{GetMsi}{V, M, s, i-1}$
         \State $up \gets \Call{GetMsi}{V, M, s-V[i], i}+1$
         \If {$left < up$}
-            \State $A[1\dotsc i-1] \gets M[s][i-1]$
+            \State $A[1 \tdots i-1] \gets M[s][i-1]$
         \Else
-            \State $A[1\dotsc i] \gets M[s-V[i]][i]$
+            \State $A[1 \tdots i] \gets M[s-V[i]][i]$
             \State $A[i] \gets A[i] + 1$
         \EndIf
     \EndIf
@@ -617,9 +626,9 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  Soit le syst\`eme de capacit\'es $V = [1, 4, 5]$. Soit $S = 28$ la quantit\'e totale de confiture. L'algorithme \texttt{AlgoGlouton} produit la solution $(8, [3, 0, 5])$, alors que la solution optimale est $(6, [0, 2, 4])$, puisque 5 bocaux ne suffisent pas. Ceci est donc un contre-exemple cherch\'e. \hfill\ensuremath{\square}
 
 \subsection*{Question 9}
- Montrons que, pour tout entier $d \geq 2$, le syst\`eme de capacit\'es {\bfseries Expo} est glouton-compatible.
+ Montrons que, pour tout entier $d \geq 2$, le syst\`eme de $k$ capacit\'es {\bfseries Expo} est glouton-compatible.
  
- Soit $g$ la solution produite par l'algorithme \texttt{AlgoGlouton} pour le syst\`eme {\bfseries Expo}. Supposons qu'il existe une solution optimale $o$ diff\'erente de $g$.
+ Soit $g=(g_1, \dotsc, g_k)$ la solution produite par l'algorithme \texttt{AlgoGlouton} pour le syst\`eme {\bfseries Expo}. Supposons qu'il existe une solution optimale $o = (o_1, \dotsc, o_k)$ diff\'erente de $g$.
 
 \begin{enumerate}[a)]
  \item Montrons qu'il existe un plus grand indice $j$ pris dans $\{1,\dotsc,k\}$ tel que $o_j < g_j$.
@@ -627,7 +636,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \subsubsection*{Preuve}
  D'apr\`es les conditions du probl\`eme, on sait que les solutions $g$ et $o$ sont diff\'erentes. Donc, il existe {\itshape au moins} un indice $j \in \{1,\dotsc,k\}$ tel que $o_j < g_j$, car sinon la solution $g$ n'utiliserait toute la quantit\'e de confiture. Par ailleurs, on sait que $k$ est fini, d'o\`u il existe un plus grand indice $j \in \{1,\dotsc,k\}$ remplissant ladite condition. \hfill\ensuremath{\square}
  
- \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\).
+ \item Montrons que \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\)
  
  \subsubsection*{Preuve}
  D'apr\'es la question pr\'ec\'edente, on a $o_l \geq g_l$ pour tout $l$ dans $\{j+1,\dotsc, k\}$. De plus, puisque au cours de l'algorithme glouton on choisit le nombre maximum possible de bocaux de capacit\'e $V[l]$, on a $o_l \leq g_l$. On en d\'eduit que $o_l = g_l$.
@@ -638,9 +647,9 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
     \displaystyle\sum_{i=j+1}^{k} V[i]\cdot g_i &= \displaystyle\sum_{i=j+1}^{k} V[i]\cdot o_i \label{eq:somme_9b2}
  \end{alignat}
  
- En soustrayant \eqref{eq:somme_9b2} de \eqref{eq:somme_9b1}, on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\). \hfill\ensuremath{\square}
+ En soustrayant \eqref{eq:somme_9b2} de \eqref{eq:somme_9b1}, on obtient \( \displaystyle\sum_{i=1}^{j} V[i]\cdot g_i = \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i\) \hfill\ensuremath{\square}
  
- \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\).
+ \item Montrons que \( \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \geq V[j]\)
  
  \subsubsection*{Preuve}
  On sait que 
@@ -650,15 +659,15 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
 
  En utilisant le r\'esultat de la question pr\'ec\'edente, il en r\'esulte que
  \begin{equation*}
-    V[j]\cdot g_j \leq \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i. 
+    V[j]\cdot g_j \leq \displaystyle\sum_{i=1}^{j} V[i]\cdot o_i
  \end{equation*}
  
  D'o\`u, 
  \begin{equation*}
-    V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i. 
+    V[j]\cdot (g_j - o_j) \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i 
  \end{equation*}
  Or $g_j - o_j \geq 1$ d'apr\`es la question a) et le fait que ce sont des entiers naturels.
- Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\). \hfill\ensuremath{\square}
+ Donc, \( V[j] \leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i\) \hfill\ensuremath{\square}
  
  Cette propri\'et\'e pr\'ecise l'une des mani\`eres d'utiliser le moins possible de bocaux pour remplir une quantit\'e de confiture donn\'ee. En effet, elle consiste \`a remplir au complet tous les bocaux des plus grandes capacit\'es possibles jusqu'\`a l'arriv\'ee \`a une certaine capacit\'e. Pour cette derni\`ere, on pr\'ef\`ere ne pas remplir tous les bocaux possibles, mais de se servir plut\^ot de ceux de capacit\'e plus petite. 
  
@@ -677,12 +686,12 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \subsubsection*{Preuve}
  D'apr\`es les conditions du probl\`eme, on a
  \begin{equation*}
-    V[l]\cdot d = V[l+1].
+    V[l]\cdot d = V[l+1]
  \end{equation*}
  
  D'o\`u, 
  \begin{equation*}
-    0 = -V[l]\cdot d + V[l+1].
+    0 = -V[l]\cdot d + V[l+1]
  \end{equation*}
  
  Donc, 
@@ -691,7 +700,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \end{equation*}
  i.e.\ 
  \begin{equation*}
-    V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot o_l' + V[l+1]\cdot o_{l+1}'.
+    V[l]\cdot o_l + V[l+1]\cdot o_{l+1} = V[l]\cdot o_l' + V[l+1]\cdot o_{l+1}'
  \end{equation*}
   
   Par ailleurs, on a $o_i = o_i' $ pour tout $i \in \{1, \dotsc, k\}\setminus \{ l,l+1 \}$. 
@@ -724,7 +733,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \subsubsection*{Preuve}
  Le nombre d'it\'erations de la boucle externe est  
  \begin{equation*}
-    \text{nbiter\_ext} = V[k-1]+V[k]-1 -(V[3]+2) +1.
+    \text{nbiter\_ext} = V[k-1]+V[k]-1 -(V[3]+2) +1
  \end{equation*}
  
  Or 
@@ -762,9 +771,14 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
 
  \section{Utilisation de l'algorithme glouton}
  On s'int\'eresse maintenant \`a v\'erifier la faisabilit\'e pratique de l'algorithme glouton. Deux points sont importants \`a ce sujet : la fr\'equence d'apparition des syst\`emes de capacit\'es glouton-compatibles, et ses performances dans les cas contraire \`a l'\'egard de la solution optimale.
+ 
+ Pour ce faire, on a g\'en\'er\'e des syst\`emes de capacit\'es de mani\`ere al\'eatoire. Les capacit\'es ont \'et\'e tir\'ees al\'eatoirement dans $\Iintv{2,100}$. De plus, on a fait varier la taille $k$ des syst\`emes de 3 \`a 30. Finalement, pour chacune de ces tailles, on a obtenu 20 syst\`emes distincts.
 
  \subsection*{Question 13}
-
+ Pour chacun des syst\`emes obtenus, on a test\'e s'il \'etait ou pas glouton-compatible ; e cas \'ech\'eant, on l'a pris en compte pour la d\'etermination de la proportion de syst\`emes glouton-compatibles.
+ 
+ Cette proportion a \'et\'e calcul\'e de fa\c{c}on cumul\'ee pour chacun des sous-intervalles engendr\'es. Vous retrouverez ces r\'esultats dans la figure \ref{fig:prop} ci-dessous.
+ 
 \begin{figure}[!h]
   \centering
   \captionsetup{justification=centering}
@@ -782,13 +796,35 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
 	  {../data/proportion.txt};
 	\end{axis}
   \end{tikzpicture}
-  \caption[L'impact de la longueur du syst\`eme]{Variation de la proportion de syst\`emes glouton-compatibles en fonction de la borne sup\'erieure de l'intervalle de longueurs consid\'er\'e}
+  \caption[Variation de la proportion de syst\`emes glouton-compatibles]{Variation de la proportion de syst\`emes glouton-compatibles en fonction de la borne sup\'erieure de l'intervalle de longueurs consid\'er\'e}
   \label{fig:prop}
 \end{figure}
 
- \subsection*{Question 14}
- 
+On d\'eduit de cette courbe que les syst\`emes de capacit\'es glouton-compatibles sont plus rares au fur et a mesure que l'on consid\`ere des tailles plus grandes. En effet, pour l'intervalle $\Iintv{3,30}$, on compte seulement 1,07 \% de syst\`emes glouton-compatibles. Ceci veut dire qu'il y en a tr\`es peu qui sont non {\bfseries Expo}, pour lesquels l'algorithme glouton est optimal et tr\`es efficace.
 
+ \subsection*{Question 14}
+ En revanche, pour la plupart des syst\`emes g\'en\'er\'es, qui n'\'etaient pas glouton-compatibles, on a cherch\'e \`a mesurer les performances de l'algorithme glouton. Ainsi, on a lanc\'e les algorithmes \texttt{AlgoGlouton} (en question) et \texttt{AlgoProgDyn} (le meilleur) sur des diverses entr\'ees et fait un r\'esum\'e des r\'esultats obtenus. Concr\`etement, on a consid\'er\'e une quantit\'e de confiture allant de 100 jusqu'\`a 1000 pour chaque syst\`eme non glouton-compatible.
+ 
+ On a compil\'e nos r\'esultats dans le tableau \ref{tab:stats}. On a mis en rouge le nombre de bocaux parce que c'est la caract\'eristique pour laquelle l'algorithme glouton est le moins performant ; le temps CPU \'etant son point fort, on l'a mis en bleu.
+ 
+ \begin{table}
+    \begin{tabular}{|c|cc|cc|}
+	\hline \multirow{3}{*}{Mesure} & \multicolumn{4}{c|}{\'Ecart} \\ 
+    \cline{2-5} & \multicolumn{2}{c}{Moyen} & \multicolumn{2}{c|}{Maximum} \\ 
+	\cline{2-5} &  valeur & en \% & valeur & en \% \\ 
+    \hline \color{red} Nombre de bocaux & 3.167 & 51.2 & 77 & 3850 \\ 
+	\hline \color{blue} Temps CPU (en \si{s}) & $\num{6.704E-03}$ & $\num{1.716E+05}$ & $\num{4.218E-02}$ & $\num{1.6E+06}$ \\ 
+	\hline
+	\end{tabular}
+	\caption[Performance compar\'ee de l'algorithme glouton]{Statistiques sur les performances des algorithmes glouton et par programmation dynamique}
+  \label{tab:stats}
+\end{table}
+
+Comme mentionn\'e pr\'ec\'edemment, l'algorithme glouton est incontestablement le plus r\'eactif. On peut s'en convaincre notamment avec la deuxi\`eme mesure du tableau ci-dessus. De plus, il semblerait que l'algorithme glouton n'est pas du tout mauvais si on ne regardait que les \'ecarts moyen et maximum du nombre de bocaux en valeur. 
+
+Cependant, il faut rappeler que la quantit\'e maximale de confiture test\'ee a \'et\'e 1000, i.e.\ elle n'a pas \'et\'e tr\`es \'el\'ev\'ee. De ce fait on justifie que les \'ecarts en pourcentage montrent la faible efficacit\'e de cet algorithme.
+
+ 
 \newpage
 
 \part*{Conclusion}
@@ -830,9 +866,22 @@ Donc, la propri\'et\'e est v\'erifi\'ee aux rangs 0 et 1.
 Montrons $Q_{1}(s)$ vraie.
 
 \smallskip
-Par hypoth\`ese de r\'ecurrence, $b(s-2) \leq b(s-1)$. D'o\`u, $2\cdot b(s-2)+2 \leq 2\cdot b(s-1)+2$.
-Or, par d\'efinition, $b(s+1) = 2\cdot b(s-1) + 2$.
-Donc, $b(s) \leq b(s+1)$, i.e.\ la propri\'et\'e est v\'erifi\'ee au rang $s$.
+Par hypoth\`ese de r\'ecurrence,
+\begin{equation*}
+   b(s-2) \leq b(s-1)
+\end{equation*}
+
+D'o\`u, 
+\begin{equation}
+   2\cdot b(s-2)+2 \leq 2\cdot b(s-1)+2 \label{eq:ineg_a1}
+\end{equation}
+
+Or, par d\'efinition, 
+\begin{equation}
+   b(s+1) = 2\cdot b(s-1) + 2 \label{eq:def_a1}
+\end{equation}
+
+En rempla\c{c}ant \eqref{eq:def_a1} en \eqref{eq:ineg_a1}, on obtient $b(s) \leq b(s+1)$, i.e.\ la propri\'et\'e est v\'erifi\'ee au rang $s$.
 
 \medskip
 \underline{Conclusion} : 
@@ -846,7 +895,8 @@ Q_{1}(0) \text{ et } Q_{1}(1) \text{ vraies } \\
 \end{array}\right .
 \end{equation*}
 
-On remarque que ceci correspond \`a la d\'efinition d'une suite croissante. \hfill\ensuremath{\blacksquare}
+\bigskip
+On remarque que ceci correspond \`a la d\'efinition d'une suite croissante. \hfill\ensuremath{\square}
 
 \subsection*{Suite $c(s)$}
 Soit la propri\'et\'e suivante $Q_{2}(s), s \geq 0$ : $c(s) \geq 0$.
@@ -861,9 +911,22 @@ Donc, la propri\'et\'e est v\'erifi\'e aux rang 0.
 Montrons $Q_{2}(s+1)$ vraie.
 
 \smallskip
-Par d\'efinition, $c(s+1) = 2\cdot c(s) + 2$.
-Or, par hypoth\`ese de r\'ecurrence, $c(s) \geq 0$. D'o\`u, $2\cdot c(s)+2 \geq 2$.
-Donc, $c(s+1) \geq 2 \geq 0$. On en d\'eduit par transitivit\'e que la propri\'et\'e est v\'erifi\'ee au rang $s+1$.
+Par d\'efinition,
+\begin{equation}
+   c(s+1) = 2\cdot c(s) + 2 \label{eq:def_a2}
+\end{equation}
+
+Or, par hypoth\`ese de r\'ecurrence,
+\begin{equation*}
+   c(s) \geq 0
+\end{equation*}
+
+D'o\`u, 
+\begin{equation}
+   2\cdot c(s)+2 \geq 2 \label{eq:ineg_a2}
+\end{equation}
+
+En rempla\c{c}ant \eqref{eq:def_a2} en \eqref{eq:ineg_a2}, il r\'esulte que $c(s+1) \geq 2$. On en d\'eduit par transitivit\'e que la propri\'et\'e est v\'erifi\'ee au rang $s+1$.
 
 \medskip
 \underline{Conclusion} : 
@@ -877,13 +940,30 @@ Q_{2}(0) \text{ vraie } \\
 \end{array}\right .
 \end{equation*}
 
-Par ailleurs, on a $c(s) = 2\cdot c(s-1) + 2, s \geq 1$. D'o\`u, $c(s) \geq 2\cdot c(s-1)$.
-Comme cette suite est positive, on sait que $2\cdot c(s-1) \geq c(s)$. Donc, par transitivit\'e, $c(s) \geq c(s-1)$. Autrement dit, pour tout $s \geq 0$, $c(s+1) \geq c(s)$. 
-\hfill\ensuremath{\blacksquare}
+\bigskip
+Par ailleurs, on a 
+\begin{equation*}
+   c(s) = 2\cdot c(s-1) + 2, s \geq 1
+\end{equation*}
+
+D'o\`u,
+\begin{equation}
+   c(s) \geq 2\cdot c(s-1) \label{eq:ineg_a3}
+\end{equation}
+
+Comme cette suite est positive, on sait que 
+\begin{equation}
+   2\cdot c(s-1) \geq c(s-1) \label{eq:ineg_a4}
+\end{equation}
+
+Donc, par transitivit\'e entre \eqref{eq:ineg_a3} et \eqref{eq:ineg_a4}, $c(s) \geq c(s-1)$.
+
+Autrement dit, pour tout $s \geq 0$, $c(s+1) \geq c(s)$. \hfill\ensuremath{\square}
 
 \newpage
 \section{Complexit\'e de \texttt{RechercheExhaustive} dans le cas g\'en\'eral}
 \label{appendix:rech_gen}
+\todo{\`a faire}
 
 \end{appendices}
 	

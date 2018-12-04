@@ -67,7 +67,6 @@ def algorithmsBenchmark(fct, fstr, d_values, S_values, k_values):
 					if S >= contd[i]:
 						break
 					# time: float
-					print(k, V, S)
 					time, _ = timeFunction(fct[i], k, V, S)
 					line += f'\t{time:.6e}'
 					if time >= 60.:
