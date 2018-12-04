@@ -130,5 +130,5 @@ if __name__ == '__main__':
 	fn_st = generateSavePath('stats.txt')
 	fn_pr = generateSavePath('proportion.txt')
 	# p: float
-	p = gloutonCompatibleSystemsData(fn_pr, fn_st, 3, 30, 100, 20, f=10)
+	p = gloutonCompatibleSystemsData(fn_pr, fn_st, 3, 30, 100, 20, f=50)
 	printStatistics(p, *greedyOptimalityStatistics(fn_st))

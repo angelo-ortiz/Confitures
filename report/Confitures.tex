@@ -768,8 +768,104 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
 
  \subsection*{Question 12}
  Pour comprendre les images donn\'ees juste apr\`es, il faut pr\'eciser que les temps trouv\'es correspondent au temps CPU et non pas au temps d'ex\'ecution, et que l'on s'est arr\^et\'es d\`es que le temps de calcul m\'esur\'e d\'epasse une minute.
+ 
+\begin{figure}[!h]
+  \centering
+  \captionsetup{justification=centering}
+  \begin{tikzpicture}
+	\begin{axis}[%
+	  width=14cm,
+	  grid style={dashed,gray!30},
+	  xmin=2,
+	  xmax=30,
+	  xlabel={Longueur du syst\`eme de capacit\'es ($k$)},
+	  ylabel={Temps d'ex\'ecution (en s)},
+	  legend entries={$S=30$,$S=40$,$S=50$},
+	  legend style={nodes=right},
+	  scaled x ticks = true]
+	  \addplot [color=blue,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/es_d4_S30.txt};
+	  \addplot [color=red,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/es_d4_S40.txt};
+	  \addplot [color=black,solid,line width=1.0pt] table[col sep=space]
+      {../data/es_d4_S50.txt};
+	\end{axis}
+  \end{tikzpicture}
+  \caption[Analyse exp\'erimentale de \texttt{RechercheExhaustive}]{Analyse exp\'erimentale de la complexit\'e de l'algorithme \texttt{RechercheExhaustive} pour un syst\`eme {\bfseries Expo}, avec $d=4$, dont la taille est variable}
+  \label{fig:comp_es}
+\end{figure}
 
- \section{Utilisation de l'algorithme glouton}
+D'apr\`es la premi\`ere section, la complexit\'e de l'algorithme \texttt{RechercheExhaustive} est exponentielle en la quantit\'e de confiture. On remarque dans la figure \ref{fig:comp_es} que le temps CPU de cet algorithme explose tr\`es rapidement. En effet, le temps CPU passe d'\^etre tr\`es proche de 0 pour $S=30$ \`a une valeur de quelques unit\'es pour $S=40$. C'est d'autant plus que pour $S=50$ cela se trouve dans l'ordre des dizaines. 
+
+ \begin{figure}[!h]
+  \centering
+  \captionsetup{justification=centering}
+  \begin{tikzpicture}
+	\begin{axis}[%
+	  width=14cm,
+	  grid style={dashed,gray!30},
+	  xmin=2,
+	  xmax=30,
+	  xlabel={Longueur du syst\`eme de capacit\'es ($k$)},
+	  ylabel={Temps d'ex\'ecution (en s)},
+	  legend entries={$S=\num{5E+03}$,$S=\num{2E+05}$,$S=\num{8E+05}$},
+	  legend style={nodes=right},
+	  scaled x ticks = true]
+	  \addplot [color=blue,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/dp_d3_S5000.txt};
+	  \addplot [color=red,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/dp_d3_S20000.txt};
+	  \addplot [color=black,solid,line width=1.0pt] table[col sep=space]
+      {../data/dp_d3_S80000.txt};
+	\end{axis}
+  \end{tikzpicture}
+  \caption[Analyse exp\'erimentale de \texttt{AlgoProgDyn}]{Analyse exp\'erimentale de la complexit\'e de l'algorithme \texttt{AlgoProgDyn} pour un syst\`eme {\bfseries Expo}, avec $d=3$, dont la taille est variable}
+  \label{fig:comp_dp}
+\end{figure}
+
+\newpage
+
+Dans la deuxi\`eme section, on avait trouv\'e que la complexit\'e de l'algorithme \texttt{AlgoProgDyn} d\'epend aussi bien de la quantit\'e de confiture que de la taille du syst\`eme de capacit\'es. On a aussi en d\'eduit qu'elle est pseudo-polynomiale. Dans la figure \ref{fig:comp_dp}, on peut appr\'ecier cette augmentation moins prononc\'ee de l'algorithme en question. On le voit notamment si on trace une droite verticale. Le taux de variation est lin\'eaire en la valeur num\'erique de $S$, ce qui montre bien le caract\`ere pseudo-polynomial de l'algorithme par programmation dynamique. 
+
+ \begin{figure}[!h]
+  \centering
+  \captionsetup{justification=centering}
+  \begin{tikzpicture}
+	\begin{axis}[%
+	  width=14cm,
+	  grid style={dashed,gray!30},
+	  xmin=2,
+	  xmax=30,
+	  xlabel={Longueur du syst\`eme de capacit\'es ($k$)},
+	  ylabel={Temps d'ex\'ecution (en s)},
+	  legend entries={$S=\num{4E+08}$,$S=\num{4E+09}$,$S=\num{4E+10}$},
+	  legend style={nodes=right},
+	  scaled x ticks = true]
+	  \addplot [color=blue,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/ga_d2_S400000000.txt};
+	  \addplot [color=red,solid,line width=1.0pt] table[col sep=space] 
+	  {../data/ga_d2_S4000000000.txt};
+	  \addplot [color=black,solid,line width=1.0pt] table[col sep=space]
+      {../data/ga_d2_S40000000000.txt};
+	\end{axis}
+  \end{tikzpicture}
+  \caption[Analyse exp\'erimentale de \texttt{AlgoGlouton}]{Analyse exp\'erimentale de la complexit\'e de l'algorithme \texttt{AlgoGlouton} pour un syst\`eme {\bfseries Expo}, avec $d=2$, dont la taille est variable}
+  \label{fig:comp_ga}
+\end{figure}
+
+\newpage
+
+Dans la section pr\'ec\'edente, on a trouv\'e que la complexit\'e de l'algorithme \texttt{AlgoGlouton} d\'epandait en grande partie de la taille du syst\`eme de capacit\'es, et, d'une fa\c{c}on moins importante, de la quantit\'e de confiture \`a traiter. Dans le jeu de tests apparaissant dans la figure \ref{fig:comp_ga}, on observe que l'algorithme est tr\`es faiblement susceptible aux variations dans $S$. Par ailleurs, pour une courbe donn\'ee, on s'aper\c{c}oit que la variation n'est pas lin\'eaire en la taille $k$, mais plut\^ot quadratique. Ceci est bien conforme \`a l'analyse th\'eorique de la complexit\'e de cet algorithme.
+
+Il est important de remarquer que les courbes comportent \`a chaque fois des valeurs de $S$ de plus en plus grandes, mais que le temps CPU diminue en m\^eme temps. Cela veut dire que, pour les syst\`emes de capacit\'es {\bfseries Expo}, on peut d\'efinir la relation d'ordre suivante selon l'efficacit\'e croissante des algorithmes :
+
+\begin{equation*}
+  \texttt{RechercheExhaustive} \prec \texttt{AlgoProgDyn} \prec \texttt{AlgoGlouton}
+\end{equation*}
+
+\newpage
+
+\section{Utilisation de l'algorithme glouton}
  On s'int\'eresse maintenant \`a v\'erifier la faisabilit\'e pratique de l'algorithme glouton. Deux points sont importants \`a ce sujet : la fr\'equence d'apparition des syst\`emes de capacit\'es glouton-compatibles, et ses performances dans les cas contraire \`a l'\'egard de la solution optimale.
  
  Pour ce faire, on a g\'en\'er\'e des syst\`emes de capacit\'es de mani\`ere al\'eatoire. Les capacit\'es ont \'et\'e tir\'ees al\'eatoirement dans $\Iintv{2,100}$. De plus, on a fait varier la taille $k$ des syst\`emes de 3 \`a 30. Finalement, pour chacune de ces tailles, on a obtenu 20 syst\`emes distincts.
@@ -825,13 +921,6 @@ Comme mentionn\'e pr\'ec\'edemment, l'algorithme glouton est incontestablement l
 Cependant, il faut rappeler que la quantit\'e maximale de confiture test\'ee a \'et\'e 1000, i.e.\ elle n'a pas \'et\'e tr\`es \'el\'ev\'ee. De ce fait on justifie que les \'ecarts en pourcentage montrent la faible efficacit\'e de cet algorithme.
 
  
-\newpage
-
-\part*{Conclusion}
-\addcontentsline{toc}{part}{Conclusion}
-
-\todo{\`a faire}
-
 \newpage
 \begin{appendices}
  \section{Suites croissantes}
@@ -963,7 +1052,18 @@ Autrement dit, pour tout $s \geq 0$, $c(s+1) \geq c(s)$. \hfill\ensuremath{\squa
 \newpage
 \section{Complexit\'e de \texttt{RechercheExhaustive} dans le cas g\'en\'eral}
 \label{appendix:rech_gen}
-\todo{\`a faire}
+Pour le calcul de la complexit\'e temporelle de l'algorithme \texttt{RechercheExhaustive} dans le cas g\'en\'eral, consid\'erons de nouveau seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(k,V[1,\tdots,k],s)$.
+La complexit\'e pour ce syst\`eme de capacit\'es est donn\'ee par une suite $d(s) \leq k\cdot 2^s$. 
+
+On utilise un raisonnement par r\'ecurrence forte. Pour fonder la base, on montre que
+\begin{alignat*}{1}
+    d(0) &= 0 \\
+   d(s) &\leq k\cdot 2^{s-1}, \forall s \in \{1, \dotsc, k+1 \}
+\end{alignat*}
+
+Puis, dans la phase d'induction, on retrouvera un terme lin\'eaire en $k$ qui est soustrait de l'expression exponentielle donn\'ee ci-dessus.
+
+La complexit\'e est alors en $\mathcal{O}(k\cdot 2^s)$.
 
 \end{appendices}
 	
