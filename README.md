@@ -1,6 +1,6 @@
-Sorbonne Université
-Department of Computer Science
-Academic Year 2018/19
+Sorbonne Université<br>
+Department of Computer Science<br>
+Academic Year 2018/19<br>
 Module: Algorithms (3I003)
 
 Presentation
@@ -25,8 +25,8 @@ Here is located the university's logo.
 
 report
 ------
-This directory comprises the report---written in french---files. The report consists of the complexity analysis of the aforementioned algorithms, and the feasibility study of the greedy algorithm.
+This directory comprises the report—written in french—files. The report consists of the complexity analysis of the aforementioned algorithms, and the feasibility study of the greedy algorithm.
 
 src
 ---
-The algorithms implementation are located here. There are also some useful functions in the *tools.py* file; the performances mesuring in *benchmark.py*; the assessment of the practicality of the greedy policy in the *gp_feasibility.py*; and a script to run the algorithms from data files in *run.py*.
+The algorithms implementation are located here. There are also some useful functions in the **tools.py** file; the performances mesuring in **benchmark.py**; the assessment of the practicality of the greedy policy in the **gp_feasibility.py**; and a script to run the algorithms from data files in **run.py**.
