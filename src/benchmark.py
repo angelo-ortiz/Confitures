@@ -56,7 +56,13 @@ def generateSvalues(b=10, p=15):
 
 def algorithmsBenchmark(fct, fstr, d_values, S_values, k_values):
 	""" list[fun] x list[str] x list[int] x list[int] x list[int] ->
+	performs the benchmark of every function of
+	the list <fct> for the 'd' generators in
+	<d_values>, the systems lengths in <k_values>
+	and the confiture quantities in <S_values>.
 	
+	N.B. The list <fstr> contains the string
+	prefix of the correponding function in <fct>
 	"""
 	print('Starting benchmark ...')
 	# d, k, i, S: int
@@ -88,6 +94,10 @@ def algorithmsBenchmark(fct, fstr, d_values, S_values, k_values):
 
 def generatePlotFiles(fct, d, S_plot, S_values):
 	""" str x int x list[int] x list[int] ->
+	generates a two-column file per confiture
+	quantity in <S_plot> corresponding to the
+	performance of the algorithm whose prefix
+	is <fct> for the generator <d>
 	"""
 	# fn: str
 	fn = generateBenchmarkSavePath(fct, d)
