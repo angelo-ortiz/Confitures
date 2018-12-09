@@ -45,6 +45,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.13}
 \usetikzlibrary{plotmarks}
+\usepackage{tcolorbox}
 
 % ********* Graphics definition *******
 \usepackage{eso-pic} % these two are required to add the little picture on top of every page
@@ -675,7 +676,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
  \begin{alignat*}{2}
  	V[j] &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot o_i \\
  		 &\leq \displaystyle\sum_{i=1}^{j-1} V[i]\cdot (d-1) \\
- 		 &\leq (d-1)\cdot \displaystyle\sum_{i=1}^{j-1} 2^{i-1} \\
+ 		 &\leq (d-1)\cdot \displaystyle\sum_{i=1}^{j-1} d^{i-1} \\
  		 &\leq (d-1)\cdot \frac{d^{j-1}-1}{d-1} \\
  	d^{j-1}	 &\leq d^{j-1}-1 & \text{car } d-1 \geq 1
  \end{alignat*}
@@ -795,7 +796,7 @@ De ce fait, la complexit\'e temporelle de l'algorithme \texttt{AlgoGlouton} dans
   \label{fig:comp_es}
 \end{figure}
 
-D'apr\`es la premi\`ere section, la complexit\'e de l'algorithme \texttt{RechercheExhaustive} est exponentielle en la quantit\'e de confiture. On remarque dans la figure \ref{fig:comp_es} que le temps CPU de cet algorithme explose tr\`es rapidement. En effet, le temps CPU passe d'\^etre tr\`es proche de 0 pour $S=30$ \`a une valeur de quelques unit\'es pour $S=40$. C'est d'autant plus que pour $S=50$ cela se trouve dans l'ordre des dizaines. 
+D'apr\`es la question 2, la complexit\'e de l'algorithme \texttt{RechercheExhaustive} est exponentielle en la quantit\'e de confiture. On remarque dans la figure \ref{fig:comp_es} que le temps CPU de cet algorithme explose tr\`es rapidement. En effet, le temps CPU passe d'\^etre tr\`es proche de 0 pour $S=30$ \`a une valeur de quelques unit\'es pour $S=40$. C'est d'autant plus que pour $S=50$ cela se trouve dans l'ordre des dizaines. 
 
  \begin{figure}[!h]
   \centering
@@ -871,7 +872,7 @@ Il est important de remarquer que les courbes comportent \`a chaque fois des val
  Pour ce faire, on a g\'en\'er\'e des syst\`emes de capacit\'es de mani\`ere al\'eatoire. Les capacit\'es ont \'et\'e tir\'ees al\'eatoirement dans $\Iintv{2,100}$. De plus, on a fait varier la taille $k$ des syst\`emes de 3 \`a 30. Finalement, pour chacune de ces tailles, on a obtenu 20 syst\`emes distincts.
 
  \subsection*{Question 13}
- Pour chacun des syst\`emes obtenus, on a test\'e s'il \'etait ou pas glouton-compatible ; e cas \'ech\'eant, on l'a pris en compte pour la d\'etermination de la proportion de syst\`emes glouton-compatibles.
+ Pour chacun des syst\`emes obtenus, on a d\'etermin\'e s'il \'etait ou pas glouton-compatible et, le cas \'ech\'eant, on l'a pris en compte pour la d\'etermination de la proportion de syst\`emes glouton-compatibles.
  
  Cette proportion a \'et\'e calcul\'e de fa\c{c}on cumul\'ee pour chacun des sous-intervalles engendr\'es. Vous retrouverez ces r\'esultats dans la figure \ref{fig:prop} ci-dessous.
  
@@ -1052,18 +1053,77 @@ Autrement dit, pour tout $s \geq 0$, $c(s+1) \geq c(s)$. \hfill\ensuremath{\squa
 \newpage
 \section{Complexit\'e de \texttt{RechercheExhaustive} dans le cas g\'en\'eral}
 \label{appendix:rech_gen}
-Pour le calcul de la complexit\'e temporelle de l'algorithme \texttt{RechercheExhaustive} dans le cas g\'en\'eral, consid\'erons de nouveau seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(k,V[1,\tdots,k],s)$.
-La complexit\'e pour ce syst\`eme de capacit\'es est donn\'ee par une suite $d(s) \leq k\cdot 2^s$. 
+D\'eterminons la complexit\'e temporelle de l'algorithme \texttt{RechercheExhaustive} dans le cas g\'en\'eral. Pour ce faire, consid\'erons de nouveau seulement les appels r\'ecursifs effectu\'es par \texttt{RechercheExhaustive}$(k,V[1 \tdots k],s)$. Notons $d(s)$ le nombre de ces appels r\'ecursifs. La complexit\'e de l'algorithme \texttt{RechercheExhaustive} sera ainsi d\'eduite de $d(s > 0)$.
 
-On utilise un raisonnement par r\'ecurrence forte. Pour fonder la base, on montre que
+Par d\'efinition de l'algorithme, on a $d(s \leq 0) = 0$.
+
+Soit la propri\'et\'e $Q_3(s), s > 0 $ : $d(s) \leq k\cdot 2^{s-1}$.
+Montrons-la par r\'ecurrence forte sur $s$.
+
+\subsection*{Preuve}
+\underline{Base} : Pour \( s = 1\), on a $d(1) = k$, puisque pour tout $i \in \{1, \dotsc, k \}$, $1 - V[i] \leq 0$. Donc, $Q_{3}(1)$ est vraie.
+
+\medskip
+\underline{Induction 1} : Supposons \( Q_{3}(s) \) vraie pour tout \( s < s_1 \), pour un $s_1 \leq k+1$ fix\'e. Montrons \( Q_{3}(s_1) \) vraie.
+
+Par d\'efinition,
 \begin{alignat*}{1}
-    d(0) &= 0 \\
-   d(s) &\leq k\cdot 2^{s-1}, \forall s \in \{1, \dotsc, k+1 \}
+    d(s_1) &= k + \displaystyle\sum_{i = 1}^{k} d(s_1 - V[i])
 \end{alignat*}
 
-Puis, dans la phase d'induction, on retrouvera un terme lin\'eaire en $k$ qui est soustrait de l'expression exponentielle donn\'ee ci-dessus.
+D'o\`u,
+\begin{alignat*}{2}
+    d(s_1) &\leq k + \displaystyle\sum_{i = 1}^{k} d(s_1 - i) \\
+    d(s_1) &\leq k + \displaystyle\sum_{j = 1}^{s_1 - 1} d(j) & \text{ car }& d(s \leq 0) = 0 \\
+    d(s_1) &\leq k + k \cdot \displaystyle\sum_{j = 1}^{s_1 - 1} 2^{j-1} & \text{ par }& \text{hypoth\`ese de r\'ecurrence} \\
+    d(s_1) &\leq k + k \cdot (2^{s_1-1}-1) \\
+    d(s_1) &\leq k \cdot 2^{s_1-1}
+\end{alignat*}
 
-La complexit\'e est alors en $\mathcal{O}(k\cdot 2^s)$.
+Donc, \( Q_{3}(s_1) \) est v\'erifi\'ee.
+
+\medskip
+\underline{Induction 2} : Supposons \( Q_{3}(s) \) vraie pour tout \( s < s_2 \), pour un $s_2 > k+1$ fix\'e. Montrons \( Q_{3}(s_2) \) vraie.
+
+Par d\'efinition,
+\begin{alignat*}{1}
+    d(s_2) &= k + \displaystyle\sum_{i = 1}^{k} d(s_2 - V[i])
+\end{alignat*}
+
+D'o\`u,
+\begin{alignat*}{1}
+    d(s_2) &\leq k + \displaystyle\sum_{i = 1}^{k} d(s_2 - i) \\
+    d(s_2) &\leq k + \displaystyle\sum_{j = s_2 - k}^{s_2 - 1} d(j) \\
+    d(s_2) &\leq k + k \cdot \displaystyle\sum_{j = s_2 - k}^{s_2 - 1} 2^{j-1} \phantom{ttt} \text{ par hypoth\`ese de r\'ecurrence} \\
+    d(s_2) &\leq k + k \cdot \left[ (2^{s_2-1}-1) - (2^{s_2-k-1}-1) \right] \\
+    d(s_2) &\leq k + k \cdot (2^{s_2-1} - 2^{s_2-k- 1}) \\
+    d(s_2) &\leq k \cdot 2^{s_2-1}
+\end{alignat*}
+
+Donc, \( Q_{3}(s_2) \) est v\'erifi\'ee.
+
+\medskip
+\begin{tcolorbox}
+{\bfseries Remarque :} En fait, pour $s_2 > k+1 $, la borne sup\'erieure est encore plus restrictive, \`a savoir $d(s_2) \leq k \cdot 2^{s_2 - 1} - k \cdot (s_2-k-1) \cdot 2^{s_2-k-2}$
+
+Cette borne est d'ailleurs vraiment atteignable : il suffit de prendre le syst\`eme de $k$ capacit\'es $V$ tel que, pour tout $i \in \{1, \dotsc, k\}$, $V[i] = i$. 
+\end{tcolorbox}
+
+\medskip
+\underline{Conclusion} : 
+\begin{equation*}
+\left .\begin{array}{l}
+Q_{3}(1) \text{ vraie } \\
+\forall s_1 \leq k+1, [(\forall s < s_1, Q_{3}(s)) \Rightarrow Q_{3}(s_1)] \\
+\forall s_2 > k+1, [(\forall s < s_2, Q_{3}(s)) \Rightarrow Q_{3}(s_2)]
+\end{array} \right \}
+\left .\begin{array}{l}
+\forall s \in \mathbb{N}^*, d(s) \leq k \cdot 2^{s-1}
+\end{array}\right .
+\end{equation*}
+
+\bigskip
+On d\'eduit du calcul de $d(s > 0)$ que la complexit\'e de cet algorithme est alors en $\mathcal{O}(k\cdot 2^s)$.
 
 \end{appendices}
 	
